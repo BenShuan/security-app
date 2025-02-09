@@ -1,0 +1,76 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+//npx prisma migrate dev --name init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = []
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  guard
+  admin
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  userName  String   @unique
+  password  String
+  role      Role     @default(guard)
+  createdAt DateTime @default(now())
+}
+
+enum Department {
+  security
+  operations
+  logistics
+  packaging
+  production
+  management
+}
+
+enum Site {
+  OW
+  Jerusalem
+  Yokneam
+}
+
+model Employee {
+  id          Int         @id @default(autoincrement())
+  firstName   String
+  lastName    String
+  employeeId  String      @unique
+  idNumber    String      @unique
+  phoneNumber String?
+  email       String?     @unique
+  position    String?
+  active      Boolean     @default(true)
+  startDate   DateTime    @default(now())
+  endDate     DateTime?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  department  Department
+  site        Site
+  isManager   Boolean     @default(false)
+  contractor  Contractor?
+  managerId   Int?
+  manager     Employee?   @relation("ManagedContractors", fields: [managerId], references: [id], onDelete: SetNull)
+  employees   Employee[]  @relation("ManagedContractors")
+}
+
+model Contractor {
+  id             Int      @id @default(autoincrement())
+  employee       Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId     Int      @unique
+  authExpiryDate DateTime
+  companyName    String?
+}
