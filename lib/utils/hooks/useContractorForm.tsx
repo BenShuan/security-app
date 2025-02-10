@@ -84,7 +84,7 @@ export function useContractorForm() {
       startTransition(async () => {
         const result = await searchContractorAction(searchQuery);
 
-        if (!result) return ;
+        if (result) { ;
 
         const employeeData = {
           ...result.employee,
@@ -111,6 +111,7 @@ export function useContractorForm() {
           shouldValidate: false
         });
         form.setValue('employee', employeeData, { shouldValidate: false });
+      }
       });
     } catch (error) {
       console.error('Failed to search contractor:', error);
