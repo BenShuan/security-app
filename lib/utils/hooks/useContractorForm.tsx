@@ -84,7 +84,7 @@ export function useContractorForm() {
       startTransition(async () => {
         const result = await searchContractorAction(searchQuery);
 
-        if (!result) return null;
+        if (!result) return ;
 
         const employeeData = {
           ...result.employee,
