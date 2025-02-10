@@ -84,7 +84,7 @@ export function useContractorForm() {
       startTransition(async () => {
         const result = await searchContractorAction(searchQuery);
 
-        if (!result) throw new Error('קבלן לא נמצא');
+        if (!result) return null;
 
         const employeeData = {
           ...result.employee,
