@@ -66,6 +66,22 @@
   }
 }
 
+.paper{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  gap:1rem;
+  width:fit-content;
+  padding:1.5rem;
+  margin:auto;
+  background-color:white;
+  border-radius:2rem;
+  border:1px solid #65558F;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+
+}
+
 @layer base {
   * {
     @apply border-border;

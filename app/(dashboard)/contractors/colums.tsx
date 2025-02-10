@@ -2,17 +2,19 @@
 
 import { Button } from '@/components/ui/button';
 import { Header } from '@/components/ui/table/header';
-import { updateContractorAction } from '@/lib/actions/contractors';
+import { addMonthToContractorAction, updateContractorAction } from '@/lib/actions/contractors';
 import { ColumnDef } from '@tanstack/react-table';
 import {
   ClockIcon,
   PencilIcon
 } from 'lucide-react';
 import type { Contractor } from 'node_modules/.prisma/client/index.js';
-
+import ContractorActions from './contractor-actions';
+import { cn } from '@/lib/utils/tailwind';
 export const columns: ColumnDef<Contractor>[] = [
   {
     accessorKey: 'employee.idNumber',
+
     id: 'ת.ז',
     header: ({ column }) => <Header column={column} title="ת.ז" />
   },
@@ -47,7 +49,13 @@ export const columns: ColumnDef<Contractor>[] = [
     header: ({ column }) => <Header column={column} title="תוקף אישור" />,
     cell: ({ row }) => {
       const date = new Date(row.original.authExpiryDate);
-      return date.toLocaleDateString('en-GB');
+      const isExpired = date < new Date();
+      return (
+        <div className={cn(isExpired ? 'text-red-500' : 'text-green-500')}>
+          {/* {date.toLocaleDateString('en-GB')} */}
+        </div>
+      );
+
     }
   },
   {
@@ -65,23 +73,7 @@ export const columns: ColumnDef<Contractor>[] = [
     id: 'פעולות',
     cell: ({ row }) => {
       return (
-        <div className="flex justify-between m-0 p-0">
-          <Button
-            variant="ghost"
-            className="rounded-full p-1"
-            formAction={updateContractorAction}
-          >
-            <ClockIcon className="w-4 h-4" />
-          </Button>
-
-          <Button
-            variant="ghost"
-            className="rounded-full p-1"
-            formAction={updateContractorAction}
-          >
-            <PencilIcon className="w-4 h-4" />
-          </Button>
-        </div>
+        <ContractorActions row={row} />
       );
     }
   }

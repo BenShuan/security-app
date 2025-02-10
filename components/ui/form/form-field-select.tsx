@@ -3,16 +3,10 @@ import {
   SelectTrigger,
   SelectValue,
   SelectContent,
-  SelectItem,
-
+  SelectItem
 } from '@/components/ui/select';
 import React from 'react';
-import {
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage
-} from './form';
+import { FormItem, FormLabel, FormControl, FormMessage } from './form';
 
 function FormFieldSelect({
   field,
@@ -24,19 +18,18 @@ function FormFieldSelect({
   label: string;
 }) {
   return (
-    
     <FormItem>
       <FormLabel>{label}</FormLabel>
-      <Select onValueChange={field.onChange} defaultValue={field.value}>
+      <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} {...field}>
         <FormControl>
-          <SelectTrigger className='bg-white'>
+          <SelectTrigger className="bg-white">
             <SelectValue placeholder={label} />
 
           </SelectTrigger>
         </FormControl>
         <SelectContent>
           {options.map((option) => (
-            <SelectItem className='text-right' key={option} value={option}>
+            <SelectItem className="text-right" key={option} value={option}>
               {option}
             </SelectItem>
           ))}

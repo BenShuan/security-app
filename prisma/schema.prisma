@@ -30,18 +30,18 @@ model User {
 }
 
 enum Department {
-  security
-  operations
-  logistics
-  packaging
-  production
-  management
+  אבטחה
+  תפעול
+  לוגיסטיקה
+  אריזה
+  מטבח
+  ייצור
 }
 
 enum Site {
-  OW
-  Jerusalem
-  Yokneam
+  אור_עקיבא
+  ירושלים
+  יוקנעם
 }
 
 model Employee {
@@ -69,8 +69,8 @@ model Employee {
 
 model Contractor {
   id             Int      @id @default(autoincrement())
-  employee       Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
-  employeeId     Int      @unique
+  employee       Employee @relation(fields: [employeeId], references: [idNumber], onDelete: Cascade)
+  employeeId     String      @unique
   authExpiryDate DateTime
   companyName    String?
 }

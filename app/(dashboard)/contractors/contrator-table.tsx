@@ -3,7 +3,7 @@ import { getContractors } from '@/lib/db/DBContractors';
 import React from 'react';
 import { columns } from './colums';
 import ModalButton from '@/components/modal-button';
-import NewContractor from './new-contractor';
+import NewContractorForm from './new-contractor-form';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,11 @@ async function ContractorsTable() {
   // );
 
   const addButton = (
-    <Button variant="secondary" className="rounded-full bg-secondary text-white flex items-center gap-2 px-4 py-2" asChild>
+    <Button
+      variant="secondary"
+      className="rounded-full bg-secondary text-white flex items-center gap-2 px-4 py-2"
+      asChild
+    >
       <Link href="/contractors/new-contractor">
         הוסף קבלן
         <PlusIcon />

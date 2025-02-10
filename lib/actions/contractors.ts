@@ -9,59 +9,142 @@ import {
 } from '@/lib/schemes';
 import { Department, Employee, Prisma, Site } from '@prisma/client';
 import { redirect } from 'next/navigation';
+import prisma from '../prisma';
+
+const validateContractorForm = (formData: contractorFormSchemaType) => {
+  const employeeData = employeeFormSchema.safeParse({
+    ...formData.employee
+  });
+
+  const contractorData = contractorFormSchema.safeParse({
+    companyName: formData.companyName,
+    authExpiryDate: new Date(),
+    employee: employeeData.data
+  });
+
+  return {
+    success: employeeData.success && contractorData.success,
+    errors: {
+      employee: employeeData.error,
+      contractor: contractorData.error
+    }
+  };
+};
 
 export async function createContractorAction(
   formData: contractorFormSchemaType
 ) {
   try {
-    const employeeData = employeeFormSchema.safeParse({
-      ...formData.employee
-    });
+    const { success, errors } = validateContractorForm(formData);
 
-    const contractorData = contractorFormSchema.safeParse({
-      companyName: formData.companyName,
-      authExpiryDate: new Date(),
-      employee: employeeData.data
-    });
-
-    if (!employeeData.success || !contractorData.success) {
-      return { 
-        success: false, 
-        error: 'נתונים לא תקינים' 
+    if (!success) {
+      return {
+        success: false,
+        error: errors
       };
     }
 
     const result = await createContractor({
-      companyName: contractorData.data.companyName,
-      authExpiryDate: contractorData.data.authExpiryDate,
+      companyName: formData.companyName,
+      authExpiryDate: formData.authExpiryDate,
       employee: {
-        create: employeeData.data
+        create: formData.employee
       }
     } as Prisma.ContractorCreateInput);
 
     revalidatePath('/contractors');
-    return { success: true };
-    
+    return { success: true, contractor: result };
   } catch (error) {
     console.error('Failed to create contractor:', error);
-    return { 
-      success: false, 
+    return {
+      success: false,
       error: error instanceof Error ? error.message : 'קרתה תקלה בלתי צפויה'
     };
   }
 }
 
-export async function updateContractorAction(formData: FormData) {
-  const id = parseInt(formData.get('id') as string);
-  const employeeId = parseInt(formData.get('employeeId') as string);
-  const authExpiryDate = new Date(formData.get('authExpiryDate') as string);
+export async function updateContractorAction(
+  formData: contractorFormSchemaType
+) {
+  const { success, errors } = validateContractorForm(formData);
+
+  if (!success) {
+    return { success: false, error: errors };
+  }
 
   try {
-    await updateContractor(id, authExpiryDate);
+    const { employee, ...contractor } = formData;
+    const { manager, ...employeeData } = employee;
+    formData.employee = employeeData;
+    const result = await updateContractor(formData as Prisma.ContractorGetPayload<{
+      include: { employee: {include: {manager: true}} }
+    }>);
+
+
+
 
     revalidatePath('/contractors');
+    return { success: true, contractor: result };
+
   } catch (error) {
     console.error('Failed to update contractor:', error);
-    return { success: false };
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'קרתה תקלה בלתי צפויה'
+    };
+  }
+}
+
+export async function addMonthToContractorAction(employeeId: string) {
+  console.log(employeeId);
+  try {
+    await prisma.contractor.update({
+      where: {  employeeId },
+
+      data: {
+        authExpiryDate: {
+          set: new Date(new Date().setMonth(new Date().getMonth() + 1))
+        }
+      }
+    });
+
+    console.log('Contractor updated successfully');
+
+    revalidatePath('/contractors');
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to add month to contractor:', error);
+    return {
+      success: false,
+      error: error instanceof Error ? error.message : 'קרתה תקלה בלתי צפויה'
+    };
+  }
+}
+
+export async function searchContractorAction(
+  searchQuery: string
+): Promise<Prisma.ContractorGetPayload<{
+  include: { employee: { include: { manager: true } } };
+}> | null> {
+  try {
+    const contractor = await prisma.contractor.findFirst({
+      where: {
+        employee: {
+          idNumber: searchQuery
+        }
+      },
+      include: {
+        employee: {
+          include: {
+            manager: true
+          }
+        }
+      }
+    });
+
+    return contractor;
+  } catch (error) {
+    console.error('Failed to search contractor:', error);
+    return null;
   }
 }

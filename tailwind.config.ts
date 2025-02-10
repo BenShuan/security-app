@@ -15,15 +15,21 @@ export default {
       padding: '2rem',
       screens: {
         '2xl': '1400px'
-      }
+      },
     },
     extend: {
+      paper:{
+       
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: '#F2E3D5',
+
         foreground: '#0A1126',
+
+
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))'

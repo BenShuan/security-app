@@ -53,12 +53,49 @@ export async function createContractor(data: Prisma.ContractorCreateInput) {
   }
 }
 
-export async function updateContractor(id: number, authExpiryDate: Date) {
+prisma.$extends({
+  model: {
+    contractor: {
+      async updateAuthExpiryDate({ employeeId }: { employeeId: string }) {
+        const contractor = await prisma.contractor.update({
+          where: { employeeId },
+          data: {
+            authExpiryDate: new Date(
+              new Date().setMonth(new Date().getMonth() + 1)
+            )
+          }
+        });
+        return contractor;
+      }
+    }
+  }
+});
+
+export async function updateContractor(
+  updatedContractor: Prisma.ContractorGetPayload<{
+    include: { employee: true };
+  }>
+) {
   try {
-    const contractor = await prisma.contractor.update({
-      where: { id },
+
+    const employee = await prisma.employee.update({
+      where: { idNumber: updatedContractor.employee.idNumber },
       data: {
-        authExpiryDate
+        ...updatedContractor.employee,
+      }
+    });
+    console.log('update employee', employee);
+
+
+    if (!employee) {
+      throw new Error('Employee not found');
+    }
+    const contractor = await prisma.contractor.update({
+      where: { employeeId: updatedContractor.employee.idNumber },
+
+      data: {
+        authExpiryDate: updatedContractor.authExpiryDate,
+        companyName: updatedContractor.companyName
       },
       include: {
         employee: true

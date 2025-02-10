@@ -11,6 +11,7 @@ function FormFieldInput({ field,label}: { field: any,label:string}) {
     <FormItem>
       <FormLabel>{label}</FormLabel>
 
+
       <FormControl>
         <Input placeholder={label} {...field} />
       </FormControl>
