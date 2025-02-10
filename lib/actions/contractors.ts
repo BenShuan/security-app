@@ -1,7 +1,11 @@
 'use server';
 
 import { revalidatePath } from 'next/cache';
-import { createContractor, updateContractor } from '@/lib/db/DBContractors';
+import {
+  createContractor,
+  getContractorByIdeNumber,
+  updateContractor
+} from '@/lib/db/DBContractors';
 import {
   contractorFormSchema,
   contractorFormSchemaType,
@@ -44,8 +48,20 @@ export async function createContractorAction(
       };
     }
 
+    const managerId = await prisma.employee.findFirst({
+      where: {
+        AND: {
+          department: formData.employee.department as Department,
+          isManager: true
+        }
+      }
+    });
+
+    formData.employee.managerId = managerId?.id || null;
+
     const result = await createContractor({
       companyName: formData.companyName,
+
       authExpiryDate: formData.authExpiryDate,
       employee: {
         create: formData.employee
@@ -72,20 +88,26 @@ export async function updateContractorAction(
     return { success: false, error: errors };
   }
 
+  const managerId = await prisma.employee.findFirst({
+    where: {
+      AND: {
+        department: formData.employee.department as Department,
+        isManager: true
+      }
+    }
+  });
+
+  formData.employee.managerId = managerId?.id || null;
+
   try {
-    const { employee, ...contractor } = formData;
-    const { manager, ...employeeData } = employee;
-    formData.employee = employeeData;
-    const result = await updateContractor(formData as Prisma.ContractorGetPayload<{
-      include: { employee: {include: {manager: true}} }
-    }>);
-
-
-
+    const result = await updateContractor(
+      formData as Prisma.ContractorGetPayload<{
+        include: { employee: true };
+      }>
+    );
 
     revalidatePath('/contractors');
     return { success: true, contractor: result };
-
   } catch (error) {
     console.error('Failed to update contractor:', error);
     return {
@@ -99,7 +121,7 @@ export async function addMonthToContractorAction(employeeId: string) {
   console.log(employeeId);
   try {
     await prisma.contractor.update({
-      where: {  employeeId },
+      where: { employeeId },
 
       data: {
         authExpiryDate: {
@@ -127,20 +149,8 @@ export async function searchContractorAction(
   include: { employee: { include: { manager: true } } };
 }> | null> {
   try {
-    const contractor = await prisma.contractor.findFirst({
-      where: {
-        employee: {
-          idNumber: searchQuery
-        }
-      },
-      include: {
-        employee: {
-          include: {
-            manager: true
-          }
-        }
-      }
-    });
+    
+    const contractor = await getContractorByIdeNumber(searchQuery);
 
     return contractor;
   } catch (error) {

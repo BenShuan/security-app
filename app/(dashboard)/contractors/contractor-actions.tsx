@@ -10,7 +10,7 @@ import {
   TooltipTrigger
 } from '@/components/ui/tooltip';
 import { TooltipProvider } from '@/components/ui/tooltip';
-
+import Link from 'next/link';
 interface ContractorActionsProps {
   row: {
     original: {
@@ -27,27 +27,36 @@ export default function ContractorActions({ row }: ContractorActionsProps) {
 
   return (
     <div className="flex justify-between m-0 p-0">
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger
-              className="rounded-full p-1"
-              onClick={addMonthToContractor}
-            >
-              <ClockIcon className="w-4 h-4 text-green-500 " />
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>הוספת חודש לתוקף</p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger
+            className="rounded-full p-1"
+            onClick={addMonthToContractor}
+          >
+            <ClockIcon className="w-4 h-4 text-green-500 " />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>הוספת חודש לתוקף</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
 
-      <Button
-        variant="ghost"
-        className="rounded-full p-1"
-        formAction={updateContractorAction}
-      >
-        <PencilIcon className="w-4 h-4" />
-      </Button>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger
+            className="rounded-full p-1"
+          >
+            <Link href={`/contractors/new-contractor?isEdit=true&employeeId=${row.original.employeeId}`}>
+              <PencilIcon className="w-4 h-4" />
+            </Link>
+          </TooltipTrigger>
+          <TooltipContent>
+
+            <p>עדכן פרטי עובד</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+
     </div>
   );
 }

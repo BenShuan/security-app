@@ -1,4 +1,10 @@
-import { Contractor, Employee, Prisma, PrismaClient } from '@prisma/client';
+import {
+  Contractor,
+  Department,
+  Employee,
+  Prisma,
+  PrismaClient
+} from '@prisma/client';
 import { createEmployee } from './DBEmployee';
 import prisma from '../prisma';
 
@@ -20,12 +26,17 @@ export async function getContractors() {
   }
 }
 
-export async function getContractorById(id: number) {
+export async function getContractorByIdeNumber(id: string) {
   try {
     const contractor = await prisma.contractor.findUnique({
-      where: { id },
+      where: { employeeId: id },
+
       include: {
-        employee: true
+        employee: {
+          include: {
+            manager: true
+          }
+        }
       }
     });
     return contractor;
@@ -53,23 +64,15 @@ export async function createContractor(data: Prisma.ContractorCreateInput) {
   }
 }
 
-prisma.$extends({
-  model: {
-    contractor: {
-      async updateAuthExpiryDate({ employeeId }: { employeeId: string }) {
-        const contractor = await prisma.contractor.update({
-          where: { employeeId },
-          data: {
-            authExpiryDate: new Date(
-              new Date().setMonth(new Date().getMonth() + 1)
-            )
-          }
-        });
-        return contractor;
-      }
+export async function getManeger(department: Department) {
+  const manager = await prisma.employee.findFirst({
+    where: {
+      department,
+      isManager: true
     }
-  }
-});
+  });
+  return manager;
+}
 
 export async function updateContractor(
   updatedContractor: Prisma.ContractorGetPayload<{
@@ -77,15 +80,13 @@ export async function updateContractor(
   }>
 ) {
   try {
-
     const employee = await prisma.employee.update({
       where: { idNumber: updatedContractor.employee.idNumber },
       data: {
-        ...updatedContractor.employee,
+        ...updatedContractor.employee
       }
     });
     console.log('update employee', employee);
-
 
     if (!employee) {
       throw new Error('Employee not found');

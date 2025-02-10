@@ -13,7 +13,7 @@ import {
 import { contractorFormSchemaType } from '@/lib/schemes';
 import { contractorFormSchema } from '@/lib/schemes';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -21,14 +21,21 @@ import { toast } from 'sonner';
 export function useContractorForm() {
   const router = useRouter();
 
+  const searchParams = useSearchParams();
+
+  const isEdit = Boolean(searchParams.get('isEdit'));
+  const employeeId = searchParams.get('employeeId');
+
+  console.log('employeeId', employeeId);
+
   const [isPending, startTransition] = useTransition();
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(isEdit);
 
   const form = useForm<contractorFormSchemaType>({
     resolver: zodResolver(contractorFormSchema),
     defaultValues: {
       employee: {
-        idNumber: '',
+        idNumber: employeeId || '',
         firstName: '',
         lastName: '',
         employeeId: '',
@@ -37,10 +44,10 @@ export function useContractorForm() {
         startDate: new Date(),
         department: undefined,
         site: undefined,
-        manager: ''
+        managerId: null
       },
       companyName: '',
-      authExpiryDate: new Date()
+      authExpiryDate: new Date(new Date().setMonth(new Date().getMonth() + 1))
     }
   });
 
@@ -84,34 +91,34 @@ export function useContractorForm() {
       startTransition(async () => {
         const result = await searchContractorAction(searchQuery);
 
-        if (result) { ;
+        if (result) {
+          const employeeData = {
+            ...result.employee,
+            manager: result.employee.manager
+              ? `${result.employee.manager.firstName} ${result.employee.manager.lastName}`
+              : ''
+          };
 
-        const employeeData = {
-          ...result.employee,
-          manager: result.employee.manager
-            ? `${result.employee.manager.firstName} ${result.employee.manager.lastName}`
-            : ''
-        };
-        if (result.authExpiryDate < new Date()) {
-          toast.error('אישור לא בתוקף!', {
-            description:
-              'לקבלן זה אין אישור בתוקף, יש לדבר עם המנהל כדי לקבל אישור חדש',
-            position: 'top-center',
-            duration: 5000,
-            icon: '🚨'
+          if (result.authExpiryDate < new Date()) {
+            toast.error('אישור לא בתוקף!', {
+              description:
+                'לקבלן זה אין אישור בתוקף, יש לדבר עם המנהל כדי לקבל אישור חדש',
+              position: 'top-center',
+              duration: 5000,
+              icon: '🚨'
+            });
+          }
+
+          setIsUpdating(true);
+
+          form.setValue('companyName', result.companyName || '', {
+            shouldValidate: false
           });
+          form.setValue('authExpiryDate', result.authExpiryDate || new Date(), {
+            shouldValidate: false
+          });
+          form.setValue('employee', employeeData, { shouldValidate: false });
         }
-
-        setIsUpdating(true);
-
-        form.setValue('companyName', result.companyName || '', {
-          shouldValidate: false
-        });
-        form.setValue('authExpiryDate', result.authExpiryDate || new Date(), {
-          shouldValidate: false
-        });
-        form.setValue('employee', employeeData, { shouldValidate: false });
-      }
       });
     } catch (error) {
       console.error('Failed to search contractor:', error);
@@ -131,6 +138,7 @@ export function useContractorForm() {
               color: 'green'
             }
           });
+          form.reset();
           router.push('/contractors');
         } else {
           toast.error('שגיאה', {
@@ -176,6 +184,7 @@ export function useContractorForm() {
         );
 
         if (result.success) {
+          console.log(result);
           toast.success('אישור עודכן בהצלחה');
         } else {
           toast.error('שגיאה', {

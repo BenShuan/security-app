@@ -29,8 +29,9 @@ export const employeeFormSchema = z.object({
   startDate: z.date(),
   department: z.enum(DepartmentArray),
   site: z.enum(SiteArray),
-  manager: z.string().nullable().optional()
+  managerId: z.number().nullable().optional()
 });
+
 
 export type employeeFormSchemaType = z.infer<typeof employeeFormSchema>;
 
