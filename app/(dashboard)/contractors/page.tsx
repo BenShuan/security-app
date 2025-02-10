@@ -13,17 +13,18 @@ export default async function ContractorsPage() {
       <h1 className="text-3xl font-bold my-4 hidden md:block">עובדי קבלן</h1>
       <ContractorsTable />
       <div className="paper md:hidden">
-        <Tabs defaultValue="contractors" >
+        <Tabs defaultValue="contractors" className='w-full' >
           <TabsList>
             <TabsTrigger value="contractors">חפש עובד</TabsTrigger>
             <TabsTrigger value="new-contractor">הוסף/עדכן עובד </TabsTrigger>
 
           </TabsList>
 
-          <TabsContent dir='rtl' value="contractors">
+          <TabsContent dir='rtl'  value="contractors">
             <SearchContractorForm />
           </TabsContent>
-          <TabsContent dir='rtl' value="new-contractor">
+          <TabsContent dir='rtl'  value="new-contractor">
+
             <NewContractorForm />
           </TabsContent>
         </Tabs>

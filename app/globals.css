@@ -79,6 +79,8 @@
   border-radius:2rem;
   border:1px solid #65558F;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.3);
+  width:100%;
+  max-width:85vw;
 
 }
 
