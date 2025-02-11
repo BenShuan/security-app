@@ -42,7 +42,7 @@ export default function DashboardLayout({
           <DesktopNav />
 
         </div>
-          <main className="grid flex-grow items-start gap-2 p-4 md:mr-14 sm:px-6  md:gap-4  ">
+          <main className="grid flex-grow items-start gap-2 md:mr-14  md:gap-4  ">
             {children}
           </main>
           <Toaster duration={2000} />

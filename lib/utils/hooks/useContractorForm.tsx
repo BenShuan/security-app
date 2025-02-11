@@ -9,7 +9,7 @@ import {
   createContractorAction,
   searchContractorAction,
   updateContractorAction
-} from '@/lib/actions/contractors';
+} from '@/lib/actions/contractorsActions';
 import { contractorFormSchemaType } from '@/lib/schemes';
 import { contractorFormSchema } from '@/lib/schemes';
 import { zodResolver } from '@hookform/resolvers/zod';

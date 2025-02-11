@@ -3,7 +3,7 @@ import { ClockIcon, PencilIcon } from 'lucide-react';
 import {
   addMonthToContractorAction,
   updateContractorAction
-} from '@/lib/actions/contractors';
+} from '@/lib/actions/contractorsActions';
 import {
   Tooltip,
   TooltipContent,
@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/tooltip';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Link from 'next/link';
+import { toast } from 'sonner';
 interface ContractorActionsProps {
   row: {
     original: {
@@ -20,10 +21,11 @@ interface ContractorActionsProps {
 }
 
 export default function ContractorActions({ row }: ContractorActionsProps) {
-  const addMonthToContractor = addMonthToContractorAction.bind(
-    null,
-    row.original.employeeId
-  );
+  const addMonthToContractor = async () => {
+    await addMonthToContractorAction(row.original.employeeId);
+
+    toast.success('תוקף עודכן בהצלחה');
+  };
 
   return (
     <div className="flex justify-between m-0 p-0">
@@ -43,20 +45,18 @@ export default function ContractorActions({ row }: ContractorActionsProps) {
 
       <TooltipProvider>
         <Tooltip>
-          <TooltipTrigger
-            className="rounded-full p-1"
-          >
-            <Link href={`/contractors/new-contractor?isEdit=true&employeeId=${row.original.employeeId}`}>
+          <TooltipTrigger className="rounded-full p-1">
+            <Link
+              href={`/contractors/new-contractor?isEdit=true&employeeId=${row.original.employeeId}`}
+            >
               <PencilIcon className="w-4 h-4" />
             </Link>
           </TooltipTrigger>
           <TooltipContent>
-
             <p>עדכן פרטי עובד</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-
     </div>
   );
 }

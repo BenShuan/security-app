@@ -19,7 +19,7 @@ async function main() {
       lastName: 'כהן',
       employeeId: 'EMP001',
       idNumber: '123456789',
-      phoneNumber: '050-1234567',
+      phoneNumber: '0501234567',
       email: 'yossi@example.com',
       position: 'מנהל אבטחה',
       department: Department.אבטחה,
@@ -35,7 +35,7 @@ async function main() {
       lastName: 'לוי',
       employeeId: 'EMP002',
       idNumber: '987654321',
-      phoneNumber: '050-7654321',
+      phoneNumber: '0507654321',
       department: Department.אבטחה,
       site: Site.אור_עקיבא,
       managerId: manager.id

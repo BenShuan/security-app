@@ -2,14 +2,14 @@
 
 import { Button } from '@/components/ui/button';
 import { Header } from '@/components/ui/table/header';
-import { addMonthToContractorAction, updateContractorAction } from '@/lib/actions/contractors';
-import { ColumnDef } from '@tanstack/react-table';
 import {
-  ClockIcon,
-  PencilIcon
-} from 'lucide-react';
+  addMonthToContractorAction,
+  updateContractorAction
+} from '@/lib/actions/contractorsActions';
+import { ColumnDef } from '@tanstack/react-table';
+import { ClockIcon, PencilIcon } from 'lucide-react';
 import type { Contractor } from 'node_modules/.prisma/client/index.js';
-import ContractorActions from './contractor-actions';
+import ContractorActions from './contractor-actions-icons';
 import { cn } from '@/lib/utils/tailwind';
 export const columns: ColumnDef<Contractor>[] = [
   {
@@ -52,10 +52,9 @@ export const columns: ColumnDef<Contractor>[] = [
       const isExpired = date < new Date();
       return (
         <div className={cn(isExpired ? 'text-red-500' : 'text-green-500')}>
-          {/* {date.toLocaleDateString('en-GB')} */}
+          {date.toLocaleDateString('en-GB')}
         </div>
       );
-
     }
   },
   {
@@ -72,9 +71,7 @@ export const columns: ColumnDef<Contractor>[] = [
     ),
     id: 'פעולות',
     cell: ({ row }) => {
-      return (
-        <ContractorActions row={row} />
-      );
+      return <ContractorActions row={row} />;
     }
   }
 ];
