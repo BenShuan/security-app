@@ -1,4 +1,6 @@
-import { PrismaClient, Department, Site, Role } from '@prisma/client';
+import { SiteArrayType } from '@/lib/schemes';
+import { DepartmentArrayType } from '@/lib/schemes';
+import { PrismaClient, Role } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -22,8 +24,8 @@ async function main() {
       phoneNumber: '0501234567',
       email: 'yossi@example.com',
       position: 'מנהל אבטחה',
-      department: Department.אבטחה,
-      site: Site.אור_עקיבא,
+      department: "אבטחה" as DepartmentArrayType,
+      site: "אור עקיבא" as SiteArrayType,
       isManager: true
     }
   });
@@ -36,8 +38,8 @@ async function main() {
       employeeId: 'EMP002',
       idNumber: '987654321',
       phoneNumber: '0507654321',
-      department: Department.אבטחה,
-      site: Site.אור_עקיבא,
+      department: "תפעול-אבטחה" as DepartmentArrayType,
+      site: "אור עקיבא" as SiteArrayType,
       managerId: manager.id
     }
   });
@@ -49,7 +51,7 @@ async function main() {
       companyName: 'אבטחה בע"מ',
       employee: {
         connect: {
-          idNumber: employee1.idNumber
+          employeeId: employee1.employeeId
         }
       }
     }

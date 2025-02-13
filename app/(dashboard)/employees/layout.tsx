@@ -1,6 +1,7 @@
-import Modal from '@/components/modal';
+import Link from 'next/link';
+import NavLink from './components/nav-link';
 
-export default function ContractorsLayout({
+export default function EmployeesLayout({
   children,
   modal
 }: {
@@ -8,11 +9,13 @@ export default function ContractorsLayout({
   modal: React.ReactNode;
 }) {
   return (
-    <>
-      {children}
-      {modal}
-    </>
+    <section className='flex flex-col gap-4 h-full'>
+        <NavLink />
 
-
+      <div className="p-4 flex-grow">
+        {children}
+        {modal}
+      </div>
+    </section>
   );
 }

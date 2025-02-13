@@ -34,42 +34,44 @@ model User {
   createdAt DateTime @default(now())
 }
 
-enum Department {
-  אבטחה
-  תפעול
-  לוגיסטיקה
-  אריזה
-  מטבח
-  ייצור
-}
+// enum Department {
+//   אבטחה
+//   תפעול
+//   לוגיסטיקה
+//   אריזה
+//   מטבח
+//   ייצור
+// }
 
-enum Site {
-  אור_עקיבא
-  ירושלים
-  יוקנעם
-}
+// enum Site {
+//   אור_עקיבא
+//   ירושלים
+//   יוקנעם
+// }
 
 model Employee {
   id          Int         @id @default(autoincrement())
   firstName   String
   lastName    String
   employeeId  String      @unique
-  idNumber    String      @unique
+  idNumber    String?      @unique
   phoneNumber String?
   email       String?     @unique
   position    String?
+  address     String?
   active      Boolean     @default(true)
   startDate   DateTime    @default(now())
   endDate     DateTime?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
-  department  Department
-  site        Site
+  department  String?
+  site        String?
   isManager   Boolean     @default(false)
   contractor  Contractor?
   managerId   Int?
   manager     Employee?   @relation("ManagedContractors", fields: [managerId], references: [id], onDelete: SetNull)
   employees   Employee[]  @relation("ManagedContractors")
+  guard       Guard?
 }
 
 model Contractor {
@@ -78,4 +80,15 @@ model Contractor {
   employeeId     String      @unique
   authExpiryDate DateTime
   companyName    String?
+}
+
+model Guard{
+  id Int @id @default(autoincrement())
+  employeeId String @unique
+  employee Employee @relation(fields: [employeeId], references: [employeeId], onDelete: Cascade)
+  lastCourse DateTime?
+  nextCourse DateTime?
+  imageUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

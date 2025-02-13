@@ -48,11 +48,11 @@ export const columns: ColumnDef<Employee>[] = [
     id: 'אתר',
     header: ({ column }) => <Header column={column} title="אתר" />
   },
-  {
-    accessorKey: 'manager.firstName',
-    id: 'מנהל',
-    header: ({ column }) => <Header column={column} title="מנהל" />
-  },
+  // {
+  //   accessorKey: 'manager.firstName',
+  //   id: 'מנהל',
+  //   header: ({ column }) => <Header column={column} title="מנהל" />
+  // },
   {
     accessorKey: 'actions',
     header: ({ column }) => (

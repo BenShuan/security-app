@@ -38,6 +38,7 @@ export default function FormFieldDate({
                 'w-full pl-3 text-left font-normal bg-white',
                 !field.value && 'text-muted-foreground'
               )}
+              disabled={field.disabled}
             >
               {field.value ? (
                 format(field.value, 'PPP')

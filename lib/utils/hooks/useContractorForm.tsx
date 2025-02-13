@@ -10,7 +10,11 @@ import {
   searchContractorAction,
   updateContractorAction
 } from '@/lib/actions/contractorsActions';
-import { contractorFormSchemaType } from '@/lib/schemes';
+import {
+  contractorFormSchemaType,
+  DepartmentArrayType,
+  SiteArrayType
+} from '@/lib/schemes';
 import { contractorFormSchema } from '@/lib/schemes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -26,8 +30,6 @@ export function useContractorForm() {
   const isEdit = Boolean(searchParams.get('isEdit'));
   const employeeId = searchParams.get('employeeId');
 
-  console.log('employeeId', employeeId);
-
   const [isPending, startTransition] = useTransition();
   const [isUpdating, setIsUpdating] = useState(isEdit);
 
@@ -42,8 +44,8 @@ export function useContractorForm() {
         phoneNumber: '',
         email: '',
         startDate: new Date(),
-        department: undefined,
-        site: undefined,
+        department: '' as DepartmentArrayType,
+        site: '' as SiteArrayType,
         managerId: null
       },
       companyName: '',
@@ -64,7 +66,14 @@ export function useContractorForm() {
               field.onBlur(); // Call the original onBlur
               if (attr.key === 'employee.idNumber')
                 await searchContractor(e.currentTarget.value); // Call your custom handler
-            }
+            },
+            maxLength:
+              attr.key === 'employee.idNumber' ||
+              attr.key === 'employee.employeeId' ||
+              attr.key === 'employee.phoneNumber'
+                ? 10
+                : 30,
+            disabled: isEdit && attr.key !== 'employee.idNumber'
           };
 
           switch (attr.type) {
@@ -117,7 +126,9 @@ export function useContractorForm() {
           form.setValue('authExpiryDate', result.authExpiryDate || new Date(), {
             shouldValidate: false
           });
-          form.setValue('employee', employeeData, { shouldValidate: false });
+          form.setValue('employee', employeeData as any, {
+            shouldValidate: false
+          });
         }
       });
     } catch (error) {
@@ -180,7 +191,7 @@ export function useContractorForm() {
     try {
       startTransition(async () => {
         const result = await addMonthToContractorAction(
-          contractor.employee.idNumber
+          contractor.employee.idNumber || ''
         );
 
         if (result.success) {

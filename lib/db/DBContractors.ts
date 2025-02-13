@@ -1,11 +1,4 @@
-import {
-  Contractor,
-  Department,
-  Employee,
-  Prisma,
-  PrismaClient
-} from '@prisma/client';
-import { createEmployee } from './DBEmployee';
+import {Prisma} from '@prisma/client';
 import prisma from '../prisma';
 
 export async function getContractors() {
@@ -37,7 +30,8 @@ export async function getContractorByIdeNumber(id: string) {
             manager: true
           }
         }
-      }
+      },
+    
     });
     return contractor;
   } catch (error) {
@@ -55,6 +49,7 @@ export async function createContractor(data: Prisma.ContractorCreateInput) {
       }
     });
   } catch (error) {
+   
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === 'P2002') {
         throw new Error('קיים כבר קבלן עם פרטים אלו');
@@ -64,7 +59,7 @@ export async function createContractor(data: Prisma.ContractorCreateInput) {
   }
 }
 
-export async function getManeger(department: Department) {
+export async function getManeger(department: string) {
   const manager = await prisma.employee.findFirst({
     where: {
       department,
@@ -81,7 +76,7 @@ export async function updateContractor(
 ) {
   try {
     const employee = await prisma.employee.update({
-      where: { idNumber: updatedContractor.employee.idNumber },
+      where: { idNumber: updatedContractor.employee.idNumber || undefined },
       data: {
         ...updatedContractor.employee
       }
@@ -92,7 +87,7 @@ export async function updateContractor(
       throw new Error('Employee not found');
     }
     const contractor = await prisma.contractor.update({
-      where: { employeeId: updatedContractor.employee.idNumber },
+      where: { employeeId: updatedContractor.employee.idNumber || undefined },
 
       data: {
         authExpiryDate: updatedContractor.authExpiryDate,

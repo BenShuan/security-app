@@ -9,9 +9,10 @@ import {
 import {
   contractorFormSchema,
   contractorFormSchemaType,
+  DepartmentArrayType,
   employeeFormSchema
 } from '@/lib/schemes';
-import { Department, Employee, Prisma, Site } from '@prisma/client';
+import { Employee, Prisma } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import prisma from '../prisma';
 
@@ -48,16 +49,20 @@ export async function createContractorAction(
       };
     }
 
+    console.log('formData', formData);
+
     const managerId = await prisma.employee.findFirst({
       where: {
         AND: {
-          department: formData.employee.department as Department,
+          department: formData.employee.department as DepartmentArrayType,
           isManager: true
         }
       }
     });
 
-    formData.employee.managerId = managerId?.id || null;
+    formData.employee.managerId = managerId?.id ;
+
+    console.log('formData', formData);
 
     const result = await createContractor({
       companyName: formData.companyName,
@@ -91,7 +96,7 @@ export async function updateContractorAction(
   const managerId = await prisma.employee.findFirst({
     where: {
       AND: {
-        department: formData.employee.department as Department,
+        department: formData.employee.department as DepartmentArrayType,
         isManager: true
       }
     }

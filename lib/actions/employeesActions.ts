@@ -1,9 +1,26 @@
 'use server';
 
-import { Prisma } from '@prisma/client';
-import { deleteEmployee, getAllEmployees, updateEmployees } from '../db/DBEmployee';
+import { Employee, Prisma } from '@prisma/client';
+import { deleteEmployee, getAllEmployees, getEmployeeByEmployeeId, updateEmployees } from '../db/DBEmployee';
 import { revalidatePath } from 'next/cache';
-import { readCsvFile } from '../utils/fileReader';
+import { convertToEmployee, readCsvFile } from '../utils/fileReader';
+import { contractorFormSchema } from '../schemes';
+import { employeeFormSchema } from '../schemes';
+import { employeeFormSchemaType } from '../schemes';
+
+const validateEmployeeForm = (formData: employeeFormSchemaType) => {
+  const employeeData = employeeFormSchema.safeParse({
+    ...formData
+  });
+
+  return {
+    success: employeeData.success,
+    errors: {
+      employee: employeeData.error,
+    }
+  };
+};
+
 
 export async function deleteEmployeeAction(employeeId: string) {
   try {
@@ -23,18 +40,49 @@ export async function updateEmployeesAction(formData: FormData) {
   try {
     const file = formData.get('file') as File;
 
-    readCsvFile(file, (employees) => {
-      console.log(employees.data);
+    await readCsvFile(file,async (employees) => {
+      const employeesData = convertToEmployee(employees.data);
+      const updatedEmployees = await updateEmployees(employeesData);
     });
 
 
-
-    // update employees in the database
-    // const updatedEmployees = await updateEmployees(employees);
-
+    revalidatePath('/employees');
     return { success: true, message: 'העדכון בוצע בהצלחה' };
   } catch (error) {
     console.error(error);
     return { success: false, message: 'העדכון נכשל' };
+  }
+}
+
+export async function updateEmployeeAction(formData: employeeFormSchemaType) {
+  try {
+    const employeeData = validateEmployeeForm(formData);
+    if (!employeeData.success) {
+      return { success: false, message: 'הטופס מכיל שגיאות' };
+    }
+    
+    const employee = await updateEmployees([ formData]);
+    if (employee) {
+      return { success: true, message: 'העדכון בוצע בהצלחה' };
+    } else {
+      return { success: false, message: 'העדכון נכשל' };
+    }
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Failed to update employee' };
+  }
+}
+
+export async function searchEmployeeAction(searchQuery: string) {
+  try {
+    const employee = await getEmployeeByEmployeeId(searchQuery);
+    if (employee?.success) {
+      return { success: true, data: employee.data };
+    } else {
+      return { success: false, message: employee?.error };
+    }
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Failed to search employee' };
   }
 }

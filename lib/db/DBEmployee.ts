@@ -1,5 +1,6 @@
-import { Employee, Prisma } from '@prisma/client';
+import { Employee, Prisma, Role } from '@prisma/client';
 import prisma from '../prisma';
+import { DepartmentArray } from '../schemes';
 
 function handleError(error: any) {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -28,10 +29,17 @@ export async function createEmployee(employeeData: Prisma.EmployeeCreateInput) {
   }
 }
 
-export async function getEmployeeByEmployeeId(employeeId: string) {
+export async function getEmployeeByEmployeeId(employeeId: string): Promise< null| {success:boolean,error?:string, data?:Prisma.EmployeeGetPayload<{
+  include: {
+    manager: true;
+  };
+}>|null}> {
   try {
     const employee = await prisma.employee.findUnique({
-      where: { employeeId: employeeId }
+      where: { employeeId },
+      include: {
+        manager: true
+      }
     });
     return { success: true, data: employee };
   } catch (error) {
@@ -39,12 +47,19 @@ export async function getEmployeeByEmployeeId(employeeId: string) {
   }
 }
 
-export async function getEmployeeByIdNumber(idNumber: string) {
+export async function getEmployeeByIdNumber(idNumber: string): Promise< null| {success:boolean,error?:string, data?:Prisma.EmployeeGetPayload<{
+  include: {
+    manager: true;
+  };
+}>|null}> {
   try {
     const employee = await prisma.employee.findUnique({
-      where: { idNumber }
+      where: { idNumber },
+      include: {
+        manager: true
+      }
     });
-    return employee;
+    return { success: true, data: employee };
   } catch (error) {
     return handleError(error);
   }
@@ -63,17 +78,20 @@ export async function getAllEmployees() {
   }
 }
 
-export async function updateEmployees(employees: Employee[]) {
+export async function updateEmployees(employees: Prisma.EmployeeCreateInput[]) {
   try {
-    const employeesData = employees.map(async (employee) => {
+
+    console.log(employees);
+
+    const employeesData = await Promise.all(employees.map(async (employee) => {
       const updatedEmployee = await prisma.employee.upsert({
         where: { employeeId: employee.employeeId },
-        create: employee as Prisma.EmployeeCreateInput,
+        create: employee ,
         update: employee as Prisma.EmployeeUpdateInput
       });
 
       return updatedEmployee;
-    });
+    }));
 
     return employeesData;
   } catch (error) {
@@ -92,3 +110,26 @@ export async function deleteEmployee(employeeId: string) {
     return handleError(error);
   }
 }
+
+
+export async function getGuards(): Promise< null| {success:boolean,error?:string|null, data?:Prisma.EmployeeGetPayload<{
+  include: {
+    guard: true;
+  };
+}>[]}> {
+  try {
+    const guards = await prisma.employee.findMany({
+      where: {
+        department: DepartmentArray.Values['תפעול-אבטחה']
+        }
+      ,
+      include: {
+        guard: true
+      }
+    });
+    return { success: true, data: guards, error: null };
+  } catch (error) {
+    return handleError(error);
+  }
+}
+

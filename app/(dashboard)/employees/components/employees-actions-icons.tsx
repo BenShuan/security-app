@@ -50,7 +50,7 @@ export default function EmployeeActions({ row }: EmployeeActionsProps) {
         <Tooltip>
           <TooltipTrigger className="rounded-full p-1">
             <Link
-              href={`/contractors/new-contractor?isEdit=true&employeeId=${row.original.employeeId}`}
+              href={`/employees/new-employee?isEdit=true&employeeId=${row.original.employeeId}`}
             >
               <PencilIcon className="w-4 h-4" />
             </Link>

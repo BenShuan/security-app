@@ -26,7 +26,7 @@ const contractorWithEmployeeFields = [
   {
     key: 'employee.department',
     type: 'enum',
-    options: DepartmentArray,
+    options: DepartmentArray.options,
     label: 'מחלקה'
   },
 
@@ -34,7 +34,7 @@ const contractorWithEmployeeFields = [
   {
     key: 'employee.site',
     type: 'enum',
-    options: SiteArray,
+    options: SiteArray.options,
     label: 'אתר'
   }
 ] as const;
