@@ -10,13 +10,17 @@ import GuardCardDetails from './guard-card-details';
 
 function GuardCard({ guard }: { guard: Prisma.EmployeeGetPayload<{
   include: {
-    guard: true;
+    guard: {
+      include: {
+        image: true
+      }
+    };
   };
 }> }) {
   return (
     <div className="bg-white p-4 rounded-xl aspect-[1/1.2] relative overflow-hidden shadow-md group ">
       <Image
-        src={guardImage}
+        src={guard?.guard?.image?.url || guardImage}
         alt={guard.firstName}
         fill
         className="w-full h-full object-cover rounded-md"

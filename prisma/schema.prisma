@@ -34,20 +34,6 @@ model User {
   createdAt DateTime @default(now())
 }
 
-// enum Department {
-//   אבטחה
-//   תפעול
-//   לוגיסטיקה
-//   אריזה
-//   מטבח
-//   ייצור
-// }
-
-// enum Site {
-//   אור_עקיבא
-//   ירושלים
-//   יוקנעם
-// }
 
 model Employee {
   id          Int         @id @default(autoincrement())
@@ -82,13 +68,29 @@ model Contractor {
   companyName    String?
 }
 
+model File {
+  id Int @id @default(autoincrement())
+  name String
+  url String @unique
+  downloadUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  guardId String 
+  guard Guard? @relation("ProfileImage")
+  guardFiles Guard @relation("GuardFiles", fields: [guardId],references: [employeeId],onDelete: Cascade)
+}
+
 model Guard{
   id Int @id @default(autoincrement())
   employeeId String @unique
   employee Employee @relation(fields: [employeeId], references: [employeeId], onDelete: Cascade)
   lastCourse DateTime?
   nextCourse DateTime?
-  imageUrl String?
+  imageUrl String? @unique
+  image File? @relation("ProfileImage", fields: [imageUrl], references: [url], onDelete: SetNull)
+  files File[] @relation("GuardFiles")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+

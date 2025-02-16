@@ -13,7 +13,11 @@ async function GuardGrid() {
       {guards?.success ? (
         guards?.data?.map((guard: Prisma.EmployeeGetPayload<{
           include: {
-            guard: true;
+            guard: {
+              include: {
+                image: true
+              }
+            };
           };
         }>) => <GuardCard key={guard.id} guard={guard} />)
       ) : (

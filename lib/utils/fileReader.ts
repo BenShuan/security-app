@@ -1,8 +1,8 @@
 import {  Employee, Prisma } from '@prisma/client';
 import Papa from 'papaparse';
 import { DepartmentArrayType, SiteArrayType } from '../schemes';
-
-export async function readCsvFile(file: File, cb: (employees: any) => any) {
+import { put, del } from '@vercel/blob';
+export async function readCsvFile(file: File, cb: (employees: any) => Promise<any>) {
   const text = await file.text();
   const csv = Papa.parse(text, {
     header: true,
@@ -37,6 +37,7 @@ export const convertToEmployee = (employee: any[]): Prisma.EmployeeCreateInput[]
       createdAt: convertDate(employee['From (Valid date)']),
       updatedAt: new Date(),
       isManager: false,
+      address: employee['Address'] || null,
     };
 
     return newEmployee;
@@ -44,3 +45,21 @@ export const convertToEmployee = (employee: any[]): Prisma.EmployeeCreateInput[]
 
   return employees;
 };
+
+export const uploadFile=async(file:File)=>{
+  const blob = await put(file.name, file, {
+    access: 'public',
+  });
+
+  return blob;
+}
+
+export const getFileExtension = (fileName: string) => {
+  return fileName.split('.').pop();
+} 
+
+
+export const deleteFile = async (url: string) => {
+  const blob = await del(url);
+  return blob;
+}

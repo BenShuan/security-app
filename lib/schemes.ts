@@ -74,14 +74,14 @@ export const DepartmentArray = z.enum([
   `איכות-Pharmacovigilance  and QMS`,
   `אחזקה`,
   `שרשרת אספקה`,
-  `QC`
+  `QC`,
 ]);
 export type DepartmentArrayType = z.infer<typeof DepartmentArray>;
 
 export const SiteArray = z.enum([
   `אור עקיבא`,
   `ירושלים`,
-  `יוקנעם`
+  `יוקנעם`,
 ]);
 export type SiteArrayType = z.infer<typeof SiteArray>;
 
@@ -136,3 +136,14 @@ export const contractorFormSchema = z.object({
 });
 
 export type contractorFormSchemaType = z.infer<typeof contractorFormSchema>;
+
+export const guardFormSchema = employeeFormSchema.extend({
+guard: z.object({
+  lastCourse: z.date().nullable(),
+  nextCourse: z.date().nullable(),
+  imageUrl: z.string().nullable().optional(),
+})
+})
+
+export type guardFormSchemaType = z.infer<typeof guardFormSchema>;
+

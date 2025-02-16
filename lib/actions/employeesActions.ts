@@ -1,10 +1,10 @@
 'use server';
 
 import { Employee, Prisma } from '@prisma/client';
-import { deleteEmployee, getAllEmployees, getEmployeeByEmployeeId, updateEmployees } from '../db/DBEmployee';
+import { deleteEmployee, getAllEmployees, getEmployeeByEmployeeId, updateEmployees, updateGuard } from '../db/DBEmployee';
 import { revalidatePath } from 'next/cache';
 import { convertToEmployee, readCsvFile } from '../utils/fileReader';
-import { contractorFormSchema } from '../schemes';
+import { contractorFormSchema, guardFormSchema, guardFormSchemaType } from '../schemes';
 import { employeeFormSchema } from '../schemes';
 import { employeeFormSchemaType } from '../schemes';
 
@@ -18,9 +18,21 @@ const validateEmployeeForm = (formData: employeeFormSchemaType) => {
     errors: {
       employee: employeeData.error,
     }
+    };
   };
-};
 
+  const validateGuardForm = (formData: guardFormSchemaType) => {
+    const guardData = guardFormSchema.safeParse({
+      ...formData
+    });
+
+    return {
+      success: guardData.success,
+      errors: {
+        guard: guardData.error,
+      }
+    };
+  }
 
 export async function deleteEmployeeAction(employeeId: string) {
   try {
@@ -44,10 +56,10 @@ export async function updateEmployeesAction(formData: FormData) {
       const employeesData = convertToEmployee(employees.data);
       const updatedEmployees = await updateEmployees(employeesData);
     });
-
-
+    
     revalidatePath('/employees');
     return { success: true, message: 'העדכון בוצע בהצלחה' };
+
   } catch (error) {
     console.error(error);
     return { success: false, message: 'העדכון נכשל' };
@@ -84,5 +96,26 @@ export async function searchEmployeeAction(searchQuery: string) {
   } catch (error) {
     console.error(error);
     return { success: false, message: 'Failed to search employee' };
+  }
+}
+
+export async function updateGuardAction(formData: guardFormSchemaType) {
+  try {
+    const guardData = validateGuardForm(formData);
+
+    if (!guardData.success) {
+      return { success: false, message: 'הוזנו שגיאות בטופס' };
+    }
+
+    const guard = await updateGuard(formData as Prisma.EmployeeCreateInput & {guard: Prisma.GuardCreateInput});
+    if (guard) {
+      revalidatePath('/employees/guards');
+      return { success: true, message: 'העדכון בוצע בהצלחה' };
+    } else {
+      return { success: false, message: 'העדכון נכשל' };
+    }
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'העדכון נכשל' };
   }
 }
