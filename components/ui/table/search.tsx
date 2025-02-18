@@ -5,6 +5,7 @@ import { Search } from 'lucide-react';
 import { Input } from '../input';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense, useTransition } from 'react';
+import { Spinner } from '@/components/icons';
 
 export default function SearchInput({
   table,
@@ -28,7 +29,7 @@ export default function SearchInput({
       table.setGlobalFilter(query);
     }
 
-  }, []);
+  }, [query]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQueryInput(e.target.value)
@@ -39,7 +40,7 @@ export default function SearchInput({
   }
 
   return (
-    <Suspense>
+    <Suspense fallback={<Spinner/>}>
       <div className={`relative md:grow-0 rounded-full w-fit py-4  ${className}`}>
         <Search className="absolute left-2.5 top-[1.75rem] h-4 w-4 text-muted-foreground" />
         <Input

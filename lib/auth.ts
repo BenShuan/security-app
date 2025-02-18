@@ -10,7 +10,7 @@ const secretKey = new TextEncoder().encode(process.env.AUTH_SECRET);
 const cookieName = 'auth-token';
 
 export async function createToken(
-  userId: number,
+  userId: string,
   userName: string,
   role: string
 ) {

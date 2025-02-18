@@ -27,20 +27,19 @@ enum Role {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        String   @id @default(uuid())
   userName  String   @unique
   password  String
   role      Role     @default(guard)
   createdAt DateTime @default(now())
 }
 
-
 model Employee {
-  id          Int         @id @default(autoincrement())
+  id          String      @id @default(uuid())
   firstName   String
   lastName    String
   employeeId  String      @unique
-  idNumber    String?      @unique
+  idNumber    String?     @unique
   phoneNumber String?
   email       String?     @unique
   position    String?
@@ -54,43 +53,54 @@ model Employee {
   site        String?
   isManager   Boolean     @default(false)
   contractor  Contractor?
-  managerId   Int?
+  managerId   String?
   manager     Employee?   @relation("ManagedContractors", fields: [managerId], references: [id], onDelete: SetNull)
   employees   Employee[]  @relation("ManagedContractors")
   guard       Guard?
+  car         Car?
 }
 
 model Contractor {
   id             Int      @id @default(autoincrement())
   employee       Employee @relation(fields: [employeeId], references: [idNumber], onDelete: Cascade)
-  employeeId     String      @unique
+  employeeId     String   @unique
   authExpiryDate DateTime
   companyName    String?
 }
 
 model File {
-  id Int @id @default(autoincrement())
-  name String
-  url String @unique
+  id          String   @id @default(uuid())
+  name        String
+  url         String   @unique
   downloadUrl String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  guardId String 
-  guard Guard? @relation("ProfileImage")
-  guardFiles Guard @relation("GuardFiles", fields: [guardId],references: [employeeId],onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  guardId     String
+  guard       Guard?   @relation("ProfileImage")
+  guardFiles  Guard    @relation("GuardFiles", fields: [guardId], references: [employeeId], onDelete: Cascade)
 }
 
-model Guard{
-  id Int @id @default(autoincrement())
-  employeeId String @unique
-  employee Employee @relation(fields: [employeeId], references: [employeeId], onDelete: Cascade)
+model Guard {
+  id         String    @id @default(uuid())
+  employeeId String    @unique
+  employee   Employee  @relation(fields: [employeeId], references: [employeeId], onDelete: Cascade)
   lastCourse DateTime?
   nextCourse DateTime?
-  imageUrl String? @unique
-  image File? @relation("ProfileImage", fields: [imageUrl], references: [url], onDelete: SetNull)
-  files File[] @relation("GuardFiles")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  imageUrl   String?   @unique
+  image      File?     @relation("ProfileImage", fields: [imageUrl], references: [url], onDelete: SetNull)
+  files      File[]    @relation("GuardFiles")
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 }
 
-
+model Car {
+  id            String    @id @default(uuid())
+  licenseNumber String    @unique
+  model         String
+  manufacturer  String
+  employeeId    String   @unique
+  employee      Employee @relation(fields: [employeeId], references: [employeeId], onDelete: SetDefault)
+  authParking   Boolean
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}

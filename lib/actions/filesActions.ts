@@ -114,8 +114,7 @@ export async function uploadFilesAction(formData: FormData) {
   }
 }
 
-export async function deleteFileAction(fileId: number, formData: FormData) {
-  console.log(fileId);
+export async function deleteFileAction(fileId: string, formData: FormData) {
   try {
     const file = await prisma.file.delete({
       where: {

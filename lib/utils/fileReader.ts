@@ -1,7 +1,8 @@
-import {  Employee, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import Papa from 'papaparse';
 import { DepartmentArrayType, SiteArrayType } from '../schemes';
 import { put, del } from '@vercel/blob';
+
 export async function readCsvFile(file: File, cb: (employees: any) => Promise<any>) {
   const text = await file.text();
   const csv = Papa.parse(text, {
@@ -10,6 +11,8 @@ export async function readCsvFile(file: File, cb: (employees: any) => Promise<an
     encoding: 'utf-8',
     complete: cb
   });
+
+  return csv;
 }
 
 const convertDate = (date: string) => {
@@ -46,6 +49,26 @@ export const convertToEmployee = (employee: any[]): Prisma.EmployeeCreateInput[]
   return employees;
 };
 
+export const converToCar = (cars: any[]): Prisma.CarCreateInput[] => {
+  const newCars=cars.map((car) => {
+    const newCar: Prisma.CarCreateInput = {
+      authParking: car['אישור חניון'] === 'יש',
+      manufacturer: car['יצרן'],
+      model:car['תאור דגם'],
+      licenseNumber:car['מספר רישוי'],
+      employee:{
+        connect:{
+          employeeId:car['מספר עובד']
+        }
+      }
+    };
+
+    return newCar;
+  });
+
+  return newCars;
+};
+
 export const uploadFile=async(file:File)=>{
   const blob = await put(file.name, file, {
     access: 'public',
@@ -57,7 +80,6 @@ export const uploadFile=async(file:File)=>{
 export const getFileExtension = (fileName: string) => {
   return fileName.split('.').pop();
 } 
-
 
 export const deleteFile = async (url: string) => {
   const blob = await del(url);
