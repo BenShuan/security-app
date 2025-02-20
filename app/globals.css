@@ -66,6 +66,8 @@
   }
 }
 
+@layer components{
+
 .paper{
   display:flex;
   justify-content:center;
@@ -82,8 +84,13 @@
   width:100%;
   max-width:85vw;
 
+  
+
 }
 
+
+
+}
 @layer base {
   * {
     @apply border-border;

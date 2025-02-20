@@ -12,7 +12,7 @@ import {
 
 interface AlertModalProps {
   title: string;
-  description: string;
+  description: any;
   action: string;
   cancel: string;
   triggerHidden?: boolean;

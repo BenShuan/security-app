@@ -6,7 +6,7 @@ export default async function HomePage(props: {
 }) {
   return (
     <section className="h-full w-full">
-      <ul className="flex flex-wrap gap-4 w-full h-full">
+      <ul className="flex flex-wrap gap-4 w-full h-full py-2">
         {routes.map((route) => {
           if (route.path === '/') return null;
           return (

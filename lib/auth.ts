@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation';
 import { saltAndHashPassword } from './utils/password';
 import prisma from './prisma';
 import { Role } from '@prisma/client';
+import { SiteArray } from './schemes';
 
 const secretKey = new TextEncoder().encode(process.env.AUTH_SECRET);
 const cookieName = 'auth-token';
@@ -45,6 +46,7 @@ export async function getSession() {
       userId: number;
       userName: string;
       role: string;
+      site: string;
     };
   } catch {
     // If token is invalid, delete it
@@ -67,11 +69,15 @@ interface RegisterUserData {
   email: string;
   password: string;
   userName: string;
+  site: string;
+  role: string;
 }
 
 export async function registerUser({
   password,
-  userName
+  userName,
+  site,
+  role
 }: RegisterUserData) {
   // Hash the password before storing
   const hashedPassword = await saltAndHashPassword(password);
@@ -82,7 +88,8 @@ export async function registerUser({
       data: {
         userName,
         password: hashedPassword,
-        role: 'guard' as Role // default role
+        site:site || SiteArray.Values['אור עקיבא'],
+        role:role as Role || 'guard' as Role // default role
       }
     });
 

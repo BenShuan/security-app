@@ -10,6 +10,14 @@ export async function createEmployee(employeeData: Prisma.EmployeeCreateInput) {
     const employee = await prisma.employee.create({
       data: employeeData
     });
+
+    if (employeeData.department === DepartmentArray.Values['תפעול-אבטחה']) {
+      await prisma.guard.create({
+        data: {
+          employeeId: employee.employeeId
+        }
+      });
+    }
     return employee;
   } catch (error) {
     return handleError(error);
@@ -86,6 +94,16 @@ export async function updateEmployees(employees: Prisma.EmployeeCreateInput[]) {
           create: employee,
           update: employee as Prisma.EmployeeUpdateInput
         });
+
+        if (employee.department === DepartmentArray.Values['תפעול-אבטחה']) {
+          await prisma.guard.upsert({
+            where: { employeeId: employee.employeeId },
+            create: {
+              employeeId: employee.employeeId,
+            },
+            update: {}
+          });
+        }
 
         return updatedEmployee;
       })

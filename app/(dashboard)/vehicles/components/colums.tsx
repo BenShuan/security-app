@@ -4,7 +4,7 @@ import { Header } from '@/components/ui/table/header';
 import { ColumnDef } from '@tanstack/react-table';
 import { Car, Employee, Prisma } from '@prisma/client';
 import CarActionsIcons from './car-actions-icons';
-import { Checkbox } from '@/components/components/ui/checkbox';
+import { Checkbox } from '@/components/ui/checkbox';
 
 export const columns: ColumnDef<Car>[] = [
   {
@@ -27,12 +27,12 @@ export const columns: ColumnDef<Car>[] = [
     accessorKey: 'employee.phoneNumber',
     id: 'טלפון',
     header: ({ column }) => <Header column={column} title="טלפון" />
-  },  
+  },
   {
     accessorKey: 'manufacturer',
     id: 'יצרן',
     header: ({ column }) => <Header column={column} title="יצרן" />
-  },  
+  },
   {
     accessorKey: 'model',
     id: 'דגם',
@@ -42,14 +42,14 @@ export const columns: ColumnDef<Car>[] = [
     accessorKey: 'authParking',
     id: 'אישור חניון',
     header: ({ column }) => <Header column={column} title="אישור חניון" />,
-    cell: ({row})=><Checkbox checked={row.original.authParking} />
+    cell: ({ row }) => <Checkbox checked={row.original.authParking} />
   },
 
   {
     accessorKey: 'actions',
     header: ({ column }) => (
       <div className={'flex items-center space-x-2'}>
-        <p >פעולות</p>
+        <p>פעולות</p>
       </div>
     ),
     id: 'פעולות',

@@ -9,12 +9,13 @@ export const config = {
 const middleware = async (request: NextRequest) => {
 
   return NextResponse.next();
-  const { nextUrl } = request;
-  const isLoggedIn = await getSession();
+  // const { nextUrl } = request;
+  // const user = await getSession();
 
-  if (isLoggedIn) {
-    return NextResponse.next();
-  }
+
+  // if (user) {
+  //   return NextResponse.next();
+  // }
 
   // return NextResponse.redirect(new URL('/login', nextUrl));
 };

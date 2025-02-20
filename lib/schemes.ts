@@ -85,6 +85,14 @@ export const SiteArray = z.enum([
 ]);
 export type SiteArrayType = z.infer<typeof SiteArray>;
 
+export const PasswordGroupArray = z.enum([
+  `מחשבים`,
+  `תוכנות`,
+  `מצלמות`,
+  `אחר`])
+
+export type PasswordGroupArrayType = z.infer<typeof PasswordGroupArray>
+
 export const signInSchema = object({
   userName: string({ required_error: 'User name is required' })
     .min(1, 'User name is required')
@@ -157,3 +165,17 @@ export const carFormScheme = z.object({
 })
 
 export type carFormSchemeType = z.infer<typeof carFormScheme>
+
+export const passwordFormSchema = z.object({ 
+  group : z.string(),
+  name: z.string(),
+  description: z.string().nullable(),
+  userName: z.string(),
+  password:z.string(),
+  seconde_password : z.string().nullable(),
+  site:SiteArray,
+  initParams:z.string().default('')
+
+})
+
+export type passwordFormSchemaType = z.infer<typeof passwordFormSchema>
