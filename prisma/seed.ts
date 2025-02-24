@@ -74,7 +74,7 @@ async function main() {
       name: 'סיסמה 1',
       userName: 'admin',
       password: 'admin123', // In production, use hashed passwords
-      group: 'כללי',
+      group: 'מחשבים',
       site: 'אור עקיבא' ,
       slug: 'password-1',
       initParams: '123456789'
@@ -86,7 +86,7 @@ async function main() {
       name: 'סיסמה 2',
       userName: 'admin',
       password: 'admin123', // In production, use hashed passwords,
-      group: 'כללי',
+      group: 'מחשבים',
       site: 'אור עקיבא' ,
       slug: 'password-2',
       initParams: '123456789'

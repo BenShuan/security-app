@@ -5,8 +5,9 @@ import {
   SelectContent,
   SelectItem
 } from '@/components/ui/select';
-import React from 'react';
+import React, { useRef } from 'react';
 import { FormItem, FormLabel, FormControl, FormMessage } from './form';
+import { SearchInput } from '@/components/search';
 
 function FormFieldSelect({
   field,
@@ -17,14 +18,20 @@ function FormFieldSelect({
   options: string[] | readonly string[];
   label: string;
 }) {
+
+
   return (
     <FormItem>
       <FormLabel>{label}</FormLabel>
-      <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} {...field}>
+      <Select
+        onValueChange={field.onChange}
+        defaultValue={field.value}
+        value={field.value}
+        {...field}
+      >
         <FormControl>
-          <SelectTrigger className="bg-white">
+          <SelectTrigger  className="bg-white text-right ">
             <SelectValue placeholder={label} />
-
           </SelectTrigger>
         </FormControl>
         <SelectContent>

@@ -11,15 +11,15 @@ generator client {
   previewFeatures = []
 }
 
-// datasource db {
-//   provider = "sqlite"
-//   url      = "file:./dev.db"
-// }
-
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
 
 enum Role {
   guard
@@ -52,6 +52,7 @@ model Employee {
   updatedAt   DateTime    @updatedAt
   department  String?
   site        String?
+  keyLogs     KeyLog[]
   isManager   Boolean     @default(false)
   contractor  Contractor?
   managerId   String?
@@ -90,6 +91,7 @@ model Guard {
   imageUrl   String?   @unique
   image      File?     @relation("ProfileImage", fields: [imageUrl], references: [url], onDelete: SetNull)
   files      File[]    @relation("GuardFiles")
+  keyLogs    KeyLog[]
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
 }
@@ -107,16 +109,42 @@ model Car {
 }
 
 model Password {
-  id       String @id @default(uuid())
-  slug     String @unique
-  group    String
-  name     String
-  description String?
-  userName String
-  password String
+  id               String   @id @default(uuid())
+  slug             String   @unique
+  group            String
+  name             String
+  description      String?
+  userName         String
+  password         String
   seconde_password String?
-  site    String
-  initParams String
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  site             String
+  initParams       String
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model Key {
+  id          String   @id @default(uuid())
+  keyNumber   String   @unique
+  site        String
+  description String
+  keyLog      KeyLog[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model KeyLog {
+  id          String    @id @default(uuid())
+  keyNumber   String
+  key         Key       @relation(fields: [keyNumber], references: [keyNumber], onDelete: Cascade)
+  employeeId  String
+  employee    Employee  @relation(fields: [employeeId], references: [employeeId], onDelete: Cascade)
+  keyOut      DateTime
+  guardId     String
+  guard       Guard     @relation(fields: [guardId], references: [employeeId], onDelete: SetDefault)
+  createdAt   DateTime  @default(now())
+  retrievedAt DateTime?
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([keyNumber, employeeId, keyOut])
 }

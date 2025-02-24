@@ -37,7 +37,7 @@ const contractorWithEmployeeFields = [
     label: 'אתר'
   }
 ] as const;
-
+  
 
 function NewEmployeeForm() {
  

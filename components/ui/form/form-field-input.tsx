@@ -13,7 +13,7 @@ function FormFieldInput({ field,label}: { field: any,label:string}) {
 
 
       <FormControl>
-        <Input placeholder={label} {...field} />
+        <Input placeholder={label} {...field} spellCheck={false} />
       </FormControl>
       <FormMessage />
     </FormItem>   

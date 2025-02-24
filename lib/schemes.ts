@@ -1,4 +1,4 @@
-import { object, string, z } from 'zod';
+import { date, object, string, z } from 'zod';
 
 export const DepartmentArray = z.enum([
   `מופ-רישום מו"פ`,
@@ -74,24 +74,16 @@ export const DepartmentArray = z.enum([
   `איכות-Pharmacovigilance  and QMS`,
   `אחזקה`,
   `שרשרת אספקה`,
-  `QC`,
+  `QC`
 ]);
 export type DepartmentArrayType = z.infer<typeof DepartmentArray>;
 
-export const SiteArray = z.enum([
-  `אור עקיבא`,
-  `ירושלים`,
-  `יוקנעם`,
-]);
+export const SiteArray = z.enum([`אור עקיבא`, `ירושלים`, `יוקנעם`]);
 export type SiteArrayType = z.infer<typeof SiteArray>;
 
-export const PasswordGroupArray = z.enum([
-  `מחשבים`,
-  `תוכנות`,
-  `מצלמות`,
-  `אחר`])
+export const PasswordGroupArray = z.enum([`מחשבים`, `תוכנות`, `מצלמות`, `אחר`]);
 
-export type PasswordGroupArrayType = z.infer<typeof PasswordGroupArray>
+export type PasswordGroupArrayType = z.infer<typeof PasswordGroupArray>;
 
 export const signInSchema = object({
   userName: string({ required_error: 'User name is required' })
@@ -146,36 +138,56 @@ export const contractorFormSchema = z.object({
 export type contractorFormSchemaType = z.infer<typeof contractorFormSchema>;
 
 export const guardFormSchema = employeeFormSchema.extend({
-guard: z.object({
-  lastCourse: z.date().nullable(),
-  nextCourse: z.date().nullable(),
-  imageUrl: z.string().nullable().optional(),
-})
-})
+  guard: z.object({
+    lastCourse: z.date().nullable(),
+    nextCourse: z.date().nullable(),
+    imageUrl: z.string().nullable().optional()
+  })
+});
 
 export type guardFormSchemaType = z.infer<typeof guardFormSchema>;
 
 export const carFormScheme = z.object({
-  employee:employeeFormSchema.nullable(),
-  licenseNumber:z.string(),
-  model:z.string(),
-  manufacturer:z.string(),
-  employeeId:z.string().nullable(),
-  authParking:z.boolean()
-})
+  employee: employeeFormSchema.nullable(),
+  licenseNumber: z.string(),
+  model: z.string(),
+  manufacturer: z.string(),
+  employeeId: z.string().nullable(),
+  authParking: z.boolean()
+});
 
-export type carFormSchemeType = z.infer<typeof carFormScheme>
+export type carFormSchemeType = z.infer<typeof carFormScheme>;
 
-export const passwordFormSchema = z.object({ 
-  group : z.string(),
+export const passwordFormSchema = z.object({
+  group: z.string(),
   name: z.string(),
   description: z.string().nullable(),
   userName: z.string(),
-  password:z.string(),
-  seconde_password : z.string().nullable(),
-  site:SiteArray,
-  initParams:z.string().default('')
+  password: z.string(),
+  seconde_password: z.string().nullable(),
+  site: SiteArray,
+  initParams: z.string().default('')
+});
 
-})
+export type passwordFormSchemaType = z.infer<typeof passwordFormSchema>;
 
-export type passwordFormSchemaType = z.infer<typeof passwordFormSchema>
+export const keyFormScheme = z.object({
+  keyNumber: string(),
+  description: string(),
+  site: SiteArray
+});
+
+export type keyFormSchemeType = z.infer<typeof keyFormScheme>;
+
+export const keyLogFormScheme = object({
+  keyNumber: string(),
+  employeeId: string(),
+  // employee: object({
+  //   firstName: string().optional(),
+  //   department: DepartmentArray.optional()
+  // }).optional(),
+  keyOut: date(),
+  guardId: string()
+});
+
+export type keyLogFormSchemeType = z.infer<typeof keyLogFormScheme>;

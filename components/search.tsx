@@ -1,12 +1,12 @@
 'use client';
 
-import { useTransition } from 'react';
+import { RefAttributes, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@/components/ui/input';
 import { Spinner } from '@/components/icons';
 import { Search } from 'lucide-react';
 
-export function SearchInput() {
+export function SearchInput(props:React.InputHTMLAttributes<HTMLInputElement>) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -25,7 +25,9 @@ export function SearchInput() {
         name="q"
         type="search"
         placeholder="Search..."
+        spellCheck={false}
         className="w-full rounded-lg pl-8 md:w-[200px] lg:w-[336px]"
+        {...props}
       />
       {isPending && <Spinner />}
     </form>
