@@ -9,6 +9,7 @@ async function main() {
   await prisma.employee.deleteMany();
   await prisma.user.deleteMany();
   await prisma.guard.deleteMany();
+  await prisma.rideCompany.deleteMany()
 
   // Create admin user
   const adminUser = await prisma.user.create({
@@ -25,7 +26,7 @@ async function main() {
     data: {
           firstName: 'יוסי',
           lastName: 'כהן',
-          employeeId: 'EMP001',
+          employeeId: '123456',
           idNumber: '123456789',
           phoneNumber: '0501234567',
           email: 'yossi@example.com',
@@ -44,7 +45,7 @@ async function main() {
     data: {
           firstName: 'משה',
           lastName: 'לוי',
-          employeeId: 'EMP002',
+          employeeId: '654321',
           idNumber: '987654321',
           phoneNumber: '0507654321',
           department: 'תפעול-אבטחה' ,
@@ -90,6 +91,45 @@ async function main() {
       site: 'אור עקיבא' ,
       slug: 'password-2',
       initParams: '123456789'
+    }
+  });
+
+
+  // Create a ride company
+  const rideCompany = await prisma.rideCompany.create({
+    data: {
+      name: 'חברת הסעות בע"מ',
+      areas: 'אור עקיבא, חדרה'
+    }
+  });
+
+  // Create a ride contact
+  const rideContact = await prisma.rideContacts.create({
+    data: {
+      name: 'דוד לוי',
+      phoneNumber: '0501234567',
+      rideCompanyName: rideCompany.name
+    }
+  });
+
+  // Create ride logs
+  const rideLog1 = await prisma.rideLog.create({
+    data: {
+      employeeId: employee1.employeeId,
+      rideCompanyName: rideCompany.name,
+      reason: 'הסעה לעבודה',
+      action: 'נכנס',
+      guardId: employee1.employeeId
+    }
+  });
+
+  const rideLog2 = await prisma.rideLog.create({
+    data: {
+      employeeId: employee1.employeeId,
+      rideCompanyName: rideCompany.name,
+      reason: 'הסעה הביתה',
+      action: 'יצא',
+      guardId: employee1.employeeId
     }
   });
 

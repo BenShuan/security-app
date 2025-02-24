@@ -124,7 +124,7 @@ export const employeeFormSchema = z.object({
   startDate: z.date(),
   department: DepartmentArray.nullable(),
   site: SiteArray.nullable(),
-  managerId: z.string().nullable().optional()
+  managerId: z.string().nullable().optional(),
 });
 
 export type employeeFormSchemaType = z.infer<typeof employeeFormSchema>;
@@ -191,3 +191,15 @@ export const keyLogFormScheme = object({
 });
 
 export type keyLogFormSchemeType = z.infer<typeof keyLogFormScheme>;
+
+export const rideLogFormScheme = object({
+  employeeId: string(),
+  employee: employeeFormSchema.optional(),
+  rideCompanyName: string(),
+  manager:string(),
+  guardId:string(),
+  reason: string(),
+  action: string()
+});
+
+export type rideLogFormSchemeType = z.infer<typeof rideLogFormScheme>;

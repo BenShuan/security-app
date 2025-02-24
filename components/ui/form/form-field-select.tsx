@@ -5,9 +5,8 @@ import {
   SelectContent,
   SelectItem
 } from '@/components/ui/select';
-import React, { useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormItem, FormLabel, FormControl, FormMessage } from './form';
-import { SearchInput } from '@/components/search';
 
 function FormFieldSelect({
   field,
@@ -15,10 +14,10 @@ function FormFieldSelect({
   label
 }: {
   field: any;
-  options: string[] | readonly string[];
+  options: string[] | readonly string[] ;
   label: string;
 }) {
-
+ 
 
   return (
     <FormItem>
@@ -30,7 +29,7 @@ function FormFieldSelect({
         {...field}
       >
         <FormControl>
-          <SelectTrigger  className="bg-white text-right ">
+          <SelectTrigger className="bg-white text-right ">
             <SelectValue placeholder={label} />
           </SelectTrigger>
         </FormControl>

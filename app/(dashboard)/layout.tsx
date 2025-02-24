@@ -9,23 +9,17 @@ import {
   Users2
 } from 'lucide-react';
 
-
-
 import { Button } from '@/components/ui/button';
-
 
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 import { Analytics } from '@vercel/analytics/react';
 import Providers from './providers';
 import { AppBar } from '@/components/appbar';
-import  DesktopNav  from './components/desktop-nav';
+import DesktopNav from './components/desktop-nav';
 import { Toaster } from '@/components/ui/toast';
-
-
-
-
-
+import { Suspense } from 'react';
+import Loader from '@/components/laoder';
 
 export default function DashboardLayout({
   children
@@ -35,25 +29,20 @@ export default function DashboardLayout({
   return (
     <Providers>
       <main className="flex min-h-screen flex-col ">
-        <div className='h-20 w-full'>
+        <div className="h-20 w-full">
           <AppBar />
 
-
           <DesktopNav />
-
         </div>
-          <main className="grid flex-grow items-start gap-2 md:mr-14  md:gap-4  ">
-            {children}
-          </main>
-          <Toaster duration={2000} />
+        <main className="grid flex-grow items-start gap-2 md:mr-14  md:gap-4  ">
+          <Suspense fallback={<Loader/>}>{children}</Suspense>
+        </main>
+        <Toaster duration={3000} />
         <Analytics />
       </main>
     </Providers>
-
-
   );
 }
-
 
 function MobileNav() {
   return (

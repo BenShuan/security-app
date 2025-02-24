@@ -4,20 +4,14 @@ import { Settings } from 'lucide-react';
 
 import { TooltipTrigger } from '@/components/ui/tooltip';
 
-import { LineChart } from 'lucide-react';
 
-import { Users2 } from 'lucide-react';
 
-import { Package } from 'lucide-react';
 
-import { ShoppingCart } from 'lucide-react';
 
-import { VercelLogo } from '@/components/icons';
 import logoMobile from '../../../assets/images/security-logo-no-slogen.png';
 
 import Link from 'next/link';
 import { NavItem } from './nav-item';
-import { Home } from 'lucide-react';
 import { Tooltip } from '@/components/ui/tooltip';
 import Image from 'next/image';
 import { routes } from '@/lib/utils/routes';

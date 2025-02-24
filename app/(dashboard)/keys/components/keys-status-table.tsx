@@ -22,7 +22,7 @@ async function KeysStatusTable() {
         />
       </div>
       <div className="block md:hidden">
-        <h1 className="text-2xl font-bold mb-4">חפש עובד</h1>
+        <h1 className="text-2xl font-bold mb-4">הוסף מפתח</h1>
         <KeyForm />
       </div>
     </div>

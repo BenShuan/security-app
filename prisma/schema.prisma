@@ -60,6 +60,7 @@ model Employee {
   employees   Employee[]  @relation("ManagedContractors")
   guard       Guard?
   car         Car?
+  RideLog     RideLog[]
 }
 
 model Contractor {
@@ -94,6 +95,7 @@ model Guard {
   keyLogs    KeyLog[]
   createdAt  DateTime  @default(now())
   updatedAt  DateTime  @updatedAt
+  RideLog    RideLog[]
 }
 
 model Car {
@@ -147,4 +149,38 @@ model KeyLog {
   updatedAt   DateTime  @updatedAt
 
   @@unique([keyNumber, employeeId, keyOut])
+}
+
+model RideCompany {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  areas         String
+  RidesContacts RideContacts[]
+  RidesLogs     RideLog[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model RideContacts {
+  id              String      @id @default(uuid())
+  name            String
+  phoneNumber     String
+  rideCompanyName String      @unique
+  ridesCompany    RideCompany @relation(fields: [rideCompanyName], references: [name], onDelete: Cascade)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model RideLog {
+  id              String      @id @default(uuid())
+  employeeId      String
+  employee        Employee    @relation(fields: [employeeId], references: [employeeId], onDelete: Cascade)
+  rideCompanyName String
+  ridesCompany    RideCompany @relation(fields: [rideCompanyName], references: [name], onDelete: SetDefault)
+  reason          String
+  action          String
+  guardId         String
+  guard           Guard       @relation(fields: [guardId], references: [employeeId])
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 }
