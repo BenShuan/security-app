@@ -73,7 +73,7 @@ export function useContractorForm() {
               attr.key === 'employee.phoneNumber'
                 ? 10
                 : 30,
-            disabled: isEdit && attr.key !== 'employee.idNumber'
+            // disabled: isEdit && attr.key !== 'employee.idNumber'
           };
 
           switch (attr.type) {

@@ -13,6 +13,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
+import useAuth from './useAuth';
 
 function useKeyForm() {
   const router = useRouter();
@@ -25,14 +26,17 @@ function useKeyForm() {
   const [isUpdating, setIsUpdating] = useState(isEdit);
   const [isPending, startTransition] = useTransition();
 
+  const {user}=useAuth()
+
   const keyForm = useForm<keyFormSchemeType>({
     resolver: zodResolver(keyFormScheme),
     defaultValues: {
       keyNumber: '',
       description: '',
-      site: '' as SiteArrayType
+      site: undefined 
     }
   });
+
 
   const renderField = (attr: any) => {
     return (
@@ -100,6 +104,8 @@ function useKeyForm() {
   function updateKey(values: keyFormSchemeType) {
     startTransition(async () => {
       try {
+        values.site=user?.site as SiteArrayType
+        console.log('values', values)
         const result = await updateKeyAction(values);
         if (result.success) {
           toast.success('מפתח עודכן בהצלחה');

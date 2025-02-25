@@ -1,7 +1,5 @@
 
 import bcrypt from 'bcryptjs';
-import { init } from 'next/dist/compiled/webpack/webpack';
-import { buffer } from 'stream/consumers';
 const SALT_ROUNDS = 10;
 
 export async function saltAndHashPassword(password: string): Promise<string> {

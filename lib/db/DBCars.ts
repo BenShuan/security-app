@@ -1,6 +1,9 @@
 import { Prisma } from '@prisma/client';
-import { handleError } from './utils';
+import { addSiteFilter, handleError } from './utils';
 import prisma from '../prisma';
+import { requireAuth } from '../auth';
+
+
 
 export async function getAllCars() {
   try {

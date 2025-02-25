@@ -1,6 +1,6 @@
 import Link from 'next/link';
 
-export default function EmployeesLayout({
+export default function RidesLayout({
   children,
   modal
 }: {
@@ -8,11 +8,9 @@ export default function EmployeesLayout({
   modal: React.ReactNode;
 }) {
   return (
-    <section className='flex flex-col gap-4 h-full'>
-      <div className="p-4 flex-grow flex flex-col">
+    <section className='flex flex-col gap-4 h-full p-4'>
         {children}
         {modal}
-      </div>
     </section>
   );
 }

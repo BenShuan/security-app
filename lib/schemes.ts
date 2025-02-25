@@ -174,7 +174,7 @@ export type passwordFormSchemaType = z.infer<typeof passwordFormSchema>;
 export const keyFormScheme = z.object({
   keyNumber: string(),
   description: string(),
-  site: SiteArray
+  site: SiteArray.optional()
 });
 
 export type keyFormSchemeType = z.infer<typeof keyFormScheme>;
@@ -182,10 +182,10 @@ export type keyFormSchemeType = z.infer<typeof keyFormScheme>;
 export const keyLogFormScheme = object({
   keyNumber: string(),
   employeeId: string(),
-  // employee: object({
-  //   firstName: string().optional(),
-  //   department: DepartmentArray.optional()
-  // }).optional(),
+  employee: object({
+    firstName: string().optional(),
+    department: DepartmentArray.optional()
+  }).optional(),
   keyOut: date(),
   guardId: string()
 });
@@ -203,3 +203,19 @@ export const rideLogFormScheme = object({
 });
 
 export type rideLogFormSchemeType = z.infer<typeof rideLogFormScheme>;
+
+export const rideCompanyFormScheme = object({
+  name: string({message:'חובה להזין שם'}),
+  areas:string({message:'חובה להזין איזורי עבודה'})
+});
+
+export type rideCompanyFormSchemeType = z.infer<typeof rideCompanyFormScheme>;
+
+export const rideContactFormScheme = object({
+  name: string({message:'חובה להזין שם'}),
+  phoneNumber:string({message:'חובה להזין פלאפון'}),
+  rideCompanyName:string(),
+});
+
+export type rideContactFormSchemeType = z.infer<typeof rideContactFormScheme>;
+

@@ -1,5 +1,4 @@
-'use client';
-
+'use client'
 import { Header } from '@/components/ui/table/header';
 import { ColumnDef } from '@tanstack/react-table';
 import { Car, Employee, Prisma } from '@prisma/client';
@@ -52,6 +51,7 @@ export const columns: ColumnDef<Car>[] = [
         <p>פעולות</p>
       </div>
     ),
+
     id: 'פעולות',
     cell: ({ row }) => {
       return <CarActionsIcons row={row} />;

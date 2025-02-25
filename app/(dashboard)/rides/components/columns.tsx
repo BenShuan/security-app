@@ -2,9 +2,9 @@
 
 import { Header } from '@/components/ui/table/header';
 import { ColumnDef } from '@tanstack/react-table';
-import ContractorActions from './keys-actions-icon';
+import ContractorActions from './rides-actions-icon';
 import { Employee, Key, Prisma } from '@prisma/client';
-import EmployeeActions from './keys-actions-icon';
+import EmployeeActions from './rides-actions-icon';
 import { Checkbox } from '@/components/ui/checkbox';
 
 export const rideLogsColomns: ColumnDef<
@@ -39,7 +39,8 @@ export const rideLogsColomns: ColumnDef<
   {
     accessorKey: 'reason',
     id: 'סיבה',
-    header: ({ column }) => <Header column={column} title="סיבה" />
+    header: ({ column }) => <Header column={column} title="סיבה" />,
+
   }, 
     {
     accessorKey: 'createdAt',

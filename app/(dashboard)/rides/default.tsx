@@ -1,3 +1,5 @@
-export default function ContractorsPage() {
- return null
+import RidePage from "./page";
+
+export default function RidesDeafult() {
+ return <RidePage/>
 }

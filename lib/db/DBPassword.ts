@@ -1,6 +1,10 @@
 import { Password } from '@prisma/client';
 import prisma from '../prisma';
-import { handleError } from './utils';
+import { addSiteFilter, handleError } from './utils';
+import { requireAuth } from '../auth';
+
+
+
 
 export const getPasswordsInGroups = async () => {
   try {
@@ -19,7 +23,6 @@ export const getPasswordsInGroups = async () => {
       }
     });
     const groupedPass = Object.entries(Object.groupBy(passwords, ({ group }) => group));
-  console.log('groupdPass', groupedPass)
 
     return groupedPass as Array<[string, Password[]]>;
   } catch (error) {

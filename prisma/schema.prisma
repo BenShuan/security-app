@@ -11,18 +11,19 @@ generator client {
   previewFeatures = []
 }
 
-// datasource db {
-//   provider = "sqlite"
-//   url      = "file:./dev.db"
-// }
-
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
+
+// datasource db {
+//   provider = "postgresql"
+//   url      = env("DATABASE_URL")
+// }
 
 enum Role {
   guard
+  manager
   admin
 }
 
@@ -164,8 +165,8 @@ model RideCompany {
 model RideContacts {
   id              String      @id @default(uuid())
   name            String
-  phoneNumber     String
-  rideCompanyName String      @unique
+  phoneNumber     String      @unique
+  rideCompanyName String      
   ridesCompany    RideCompany @relation(fields: [rideCompanyName], references: [name], onDelete: Cascade)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt

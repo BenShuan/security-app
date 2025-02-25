@@ -66,8 +66,10 @@ export async function updateKeyLogAction(formData: keyLogFormSchemeType) {
       return { success: false, message: 'הטופס מכיל שגיאות' };
     }
 
+    const {employee,...keylogValue}= formData
+
     const keylog = await CreateOrUpdateKeyLog(
-      formData as Prisma.KeyLogGetPayload<{
+      keylogValue as Prisma.KeyLogGetPayload<{
         include: { employee: true; key: true };
       }>
     );

@@ -1,10 +1,11 @@
 'use server';
 
 import { getUserFromDb } from '@/lib/db/DBUsers';
-import { comparePasswords } from '@/lib/utils/password';
-import { createToken } from '../auth';
+import { createToken, requireAuth } from '../auth';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
+import { Role } from '@prisma/client';
+import { SiteArrayType } from '../schemes';
 
 export async function signInAction(formData: FormData): Promise<void> {
 
@@ -17,7 +18,7 @@ export async function signInAction(formData: FormData): Promise<void> {
  
     // && (await comparePasswords(password, user.password))
     if (user ) {
-      await createToken(user.id, user.userName, user.role);
+      await createToken(user.id, user.userName, user.role,user.site as SiteArrayType);
       revalidatePath('/');
     }
 
@@ -34,3 +35,5 @@ export async function signOutAction(): Promise<void> {
   // Clear any session/token logic here
   redirect('/login');
 }
+
+

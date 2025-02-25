@@ -7,11 +7,12 @@ import Link from 'next/link';
 import { PlusIcon } from 'lucide-react';
 import { Tabs, TabsTrigger, TabsList, TabsContent } from '@/components/ui/tabs';
 import { Suspense } from 'react';
+import DashboardHeader from '../components/dashboard-header';
 
 export default async function ContractorsPage() {
   return (
     <div className="p-4 ">
-      <h1 className="text-3xl font-bold my-4 hidden md:block">עובדי קבלן</h1>
+      <DashboardHeader/>
       <ContractorsTable />
       <div className="paper md:hidden">
         <Tabs defaultValue="contractors" className="w-full ">

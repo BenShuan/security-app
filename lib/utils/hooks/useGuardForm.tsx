@@ -6,14 +6,12 @@ import FormFieldDate from '@/components/ui/form/form-field-date';
 import FormFieldSelect from '@/components/ui/form/form-field-select';
 import { Prisma } from '@prisma/client';
 import {
-  employeeFormSchemaType,
   guardFormSchemaType,
   guardFormSchema,
   SiteArrayType,
   DepartmentArrayType
 } from '@/lib/schemes';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useRouter } from 'next/navigation';
 import { useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';

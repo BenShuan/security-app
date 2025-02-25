@@ -2,6 +2,7 @@ import { FormField } from '@/components/ui/form/form';
 import FormFieldDate from '@/components/ui/form/form-field-date';
 import FormFieldInput from '@/components/ui/form/form-field-input';
 import FormFieldSelect from '@/components/ui/form/form-field-select';
+import { searchEmployeeAction } from '@/lib/actions/employeesActions';
 import { retriveKeyLogAction, searchKeyLogAction, updateKeyLogAction } from '@/lib/actions/keysActions';
 import { DepartmentArrayType, keyLogFormScheme, keyLogFormSchemeType } from '@/lib/schemes';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,10 +20,10 @@ const keyLogForm = useForm<keyLogFormSchemeType>({
     resolver: zodResolver(keyLogFormScheme),
     defaultValues: {
       keyNumber: '',
-      // employee:{
-      //   firstName:'',
-      //   department:'' as DepartmentArrayType
-      // },
+      employee:{
+        firstName:'',
+        department:'' as DepartmentArrayType
+      },
       employeeId:"",
       guardId:'',
       keyOut: new Date()
@@ -45,11 +46,15 @@ const keyLogForm = useForm<keyLogFormSchemeType>({
                 await searchKey(e.currentTarget.value); // Call your custom handler
                 console.log(keyLogForm.getValues());
               }
+              if (attr.key === 'employeeId') {
+                await searchEmployee(e.currentTarget.value); // Call your custom handler
+                console.log(keyLogForm.getValues());
+              }
             },
             maxLength: 30,
+            disabled: attr.key.startsWith('employee.')
           };
-
-          switch (attr.type) {
+            switch (attr.type) {
             case 'enum':
               return (
                 <FormFieldSelect
@@ -59,13 +64,34 @@ const keyLogForm = useForm<keyLogFormSchemeType>({
                 />
               );
             case 'date':
-              return <FormFieldDate field={updatedField} label={attr.label} />;
+              return <FormFieldDate  field={updatedField} label={attr.label} />;
             default:
               return <FormFieldInput field={updatedField} label={attr.label} />;
           }
         }}
       />
     );
+  };
+
+  const searchEmployee = async (searchQuery: string) => {
+    try {
+      startTransition(async () => {
+        const result = await searchEmployeeAction(searchQuery);
+
+        console.log('result', result)
+
+        if (result.success ) {
+        
+            keyLogForm.setValue('employee.department',result.data?.department as DepartmentArrayType)
+            keyLogForm.setValue('employee.firstName',result.data?.firstName)
+
+         
+        }
+      }
+    );
+    } catch (error) {
+      console.error('Failed to search KeyLog:', error);
+    }
   };
 
   const searchKey = async (searchQuery: string) => {
@@ -98,6 +124,7 @@ const keyLogForm = useForm<keyLogFormSchemeType>({
     startTransition(async () => {
       try {
 
+        
         let result;
         if (!isretrive) {
            result= await updateKeyLogAction(values);

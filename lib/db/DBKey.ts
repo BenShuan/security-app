@@ -1,6 +1,11 @@
 import { Key, KeyLog } from '@prisma/client';
 import prisma from '../prisma';
-import { handleError } from './utils';
+import { addSiteFilter, handleError } from './utils';
+import { requireAuth } from '../auth';
+import { SiteArrayType } from '../schemes';
+
+
+
 
 export const getAllKeys = async () => {
   try {
@@ -19,8 +24,8 @@ export const getAllKeys = async () => {
           take: 1
         }
       },
-      orderBy:{
-        keyNumber:'asc'
+      orderBy: {
+        keyNumber: 'asc'
       }
     });
 
@@ -30,40 +35,37 @@ export const getAllKeys = async () => {
   }
 };
 
-export const getKeyByKeyNumber=async(keyNumber:string)=>{
+export const getKeyByKeyNumber = async (keyNumber: string) => {
   try {
     const key = await prisma.key.findUnique({
-      where:{
+      where: {
         keyNumber
       }
-    })
+    });
 
-    console.log('key', key)
+    console.log('key', key);
 
     return key;
   } catch (error) {
-    console.log('error', error)
+    console.log('error', error);
     return null;
   }
+};
 
-
-
-}
-
-export const getAllKeyLogs =async()=>{
+export const getAllKeyLogs = async () => {
   try {
     const keys = await prisma.keyLog.findMany({
       include: {
-      employee:true,
-      guard:{
-        include:{
-          employee:true
-        }
+        employee: true,
+        guard: {
+          include: {
+            employee: true
+          }
+        },
+        key: true
       },
-      key: true
-      },
-      orderBy:{
-        keyOut:'desc'
+      orderBy: {
+        keyOut: 'desc'
       }
     });
 
@@ -71,13 +73,11 @@ export const getAllKeyLogs =async()=>{
   } catch (error) {
     return [];
   }
-
-
-}
+};
 
 export const getKeyLog = async (
-  keyNumber: string|undefined,
-  employeeId: string|undefined
+  keyNumber: string | undefined,
+  employeeId: string | undefined
 ) => {
   try {
     const keyLog = await prisma.keyLog.findFirst({
@@ -94,12 +94,12 @@ export const getKeyLog = async (
             ]
           },
           {
-              retrievedAt: null
+            retrievedAt: null
           }
         ]
       },
-      include:{
-        employee:true
+      include: {
+        employee: true
       }
     });
 
@@ -112,7 +112,7 @@ export const getKeyLog = async (
 
     return {
       success: false,
-      data:null,
+      data: null,
       error: 'מפתח לא הונפק '
     };
   } catch (error) {
@@ -152,9 +152,9 @@ export const CreateOrUpdateKeyLog = async (key: KeyLog) => {
       },
       create: key,
       update: key,
-      include:{
-        key:true,
-        employee:true
+      include: {
+        key: true,
+        employee: true
       }
     });
     console.log('newKey', newKey);

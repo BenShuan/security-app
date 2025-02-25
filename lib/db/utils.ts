@@ -1,4 +1,5 @@
-import { Prisma } from '@prisma/client'
+import { Prisma } from '@prisma/client';
+import { SiteArrayType } from '../schemes';
 
 export function handleError(error: any) {
   if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -15,4 +16,19 @@ export function handleError(error: any) {
       data: undefined
     };
   }
+}
+
+export function addSiteFilter(operation: string, args: any, addfilter: any) {
+  if (operation.startsWith('find')) {
+    return {
+      ...args,
+      where: {
+        ...args.where,
+        ...addfilter
+      }
+    };
+  }
+
+
+  return args;
 }

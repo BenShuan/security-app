@@ -4,13 +4,14 @@ import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Suspense } from 'react';
 import { Button } from '@/components/ui/button';
+import DashboardHeader from '../components/dashboard-header';
 
 export default async function PasswordPage() {
   const passwords = await getPasswordsInGroups()
 
   return (
     <>
-      <h1 className="text-3xl font-bold mb-4 ">סיסמאות</h1>
+    <DashboardHeader/>
       {passwords.length === 0 ? (
         <div className="text-center text-2xl font-bold paper">
           <h1>אין סיסמאות</h1>

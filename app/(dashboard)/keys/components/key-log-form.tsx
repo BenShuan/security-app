@@ -13,6 +13,7 @@ const KeyFields = [
   { key: 'keyNumber', type: 'string', label: 'מספר מפתח' },
   { key: 'employeeId', type: 'string', label: 'מספר עובד' },
   { key: 'employee.department', type: 'enum', label: 'מחלקה',options:DepartmentArray.options },
+  { key: 'employee.firstName', type: 'string', label: 'שם עובד' },
   { key: 'keyOut', type: 'date', label: 'תאריך השאלה' },
   { key: 'guardId', type: 'string', label: 'מאבטח מטפל' },
   

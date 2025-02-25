@@ -17,7 +17,7 @@ const KeyFields = [
   // Employee fields
   { key: 'keyNumber', type: 'string', label: 'מספר מפתח' },
   { key: 'description', type: 'string', label: 'תיאור' },
-  {key:'site', type:'enum', options: SiteArray.options, label:'אתר' }
+  // {key:'site', type:'enum', options: SiteArray.options, label:'אתר' }
   
 ] as const;
 

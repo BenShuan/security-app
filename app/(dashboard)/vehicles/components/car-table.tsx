@@ -14,10 +14,6 @@ async function CarsTable() {
   return (
     <div className="w-full bg-white rounded-md border p-4 hidden md:block  ">
         <DataTable columns={columns} data={cars} addButton={<UpdateCarsButton />} />
-      {/* <div className='block md:hidden'>
-        <h1 className='text-2xl font-bold mb-4'>חפש עובד</h1>
-        <NewEmployeeForm />
-      </div> */}
     
     </div>
   );

@@ -9,7 +9,9 @@ async function main() {
   await prisma.employee.deleteMany();
   await prisma.user.deleteMany();
   await prisma.guard.deleteMany();
-  await prisma.rideCompany.deleteMany()
+  await prisma.rideCompany.deleteMany();
+  await prisma.key.deleteMany();
+  await prisma.keyLog.deleteMany();
 
   // Create admin user
   const adminUser = await prisma.user.create({
@@ -24,37 +26,37 @@ async function main() {
   // Create a manager employee
   const manager = await prisma.employee.create({
     data: {
-          firstName: 'יוסי',
-          lastName: 'כהן',
-          employeeId: '123456',
-          idNumber: '123456789',
-          phoneNumber: '0501234567',
-          email: 'yossi@example.com',
-          position: 'מנהל אבטחה',
-          department: 'תפעול-אבטחה' ,
-          site: 'אור עקיבא' ,
-          isManager: true,
-          guard: {
-            create: {}
-          }
-    },
+      firstName: 'יוסי',
+      lastName: 'כהן',
+      employeeId: '123456',
+      idNumber: '123456789',
+      phoneNumber: '0501234567',
+      email: 'yossi@example.com',
+      position: 'מנהל אבטחה',
+      department: 'תפעול-אבטחה',
+      site: 'אור עקיבא',
+      isManager: true,
+      guard: {
+        create: {}
+      }
+    }
   });
 
   // Create regular employees
   const employee1 = await prisma.employee.create({
     data: {
-          firstName: 'משה',
-          lastName: 'לוי',
-          employeeId: '654321',
-          idNumber: '987654321',
-          phoneNumber: '0507654321',
-          department: 'תפעול-אבטחה' ,
-          site: 'אור עקיבא' ,
-          managerId: manager.id,
-          guard: {
-            create: {}
-          } 
-    },
+      firstName: 'משה',
+      lastName: 'לוי',
+      employeeId: '654321',
+      idNumber: '987654321',
+      phoneNumber: '0507654321',
+      department: 'תפעול-אבטחה',
+      site: 'אור עקיבא',
+      managerId: manager.id,
+      guard: {
+        create: {}
+      }
+    }
   });
 
   // Create a contractor
@@ -76,7 +78,7 @@ async function main() {
       userName: 'admin',
       password: 'admin123', // In production, use hashed passwords
       group: 'מחשבים',
-      site: 'אור עקיבא' ,
+      site: 'אור עקיבא',
       slug: 'password-1',
       initParams: '123456789'
     }
@@ -88,12 +90,11 @@ async function main() {
       userName: 'admin',
       password: 'admin123', // In production, use hashed passwords,
       group: 'מחשבים',
-      site: 'אור עקיבא' ,
+      site: 'אור עקיבא',
       slug: 'password-2',
       initParams: '123456789'
     }
   });
-
 
   // Create a ride company
   const rideCompany = await prisma.rideCompany.create({
@@ -129,6 +130,60 @@ async function main() {
       rideCompanyName: rideCompany.name,
       reason: 'הסעה הביתה',
       action: 'יצא',
+      guardId: employee1.employeeId
+    }
+  });
+
+  // Create keys
+  const key1 = await prisma.key.create({
+    data: {
+      keyNumber: '1',
+      description: 'מפתח 1',
+      site: 'אור עקיבא'
+    }
+  });
+
+  const key2 = await prisma.key.create({
+    data: {
+      keyNumber: '2',
+      site: 'אור עקיבא',
+      description: 'key-2'
+    }
+  });
+
+  // Create key logs
+  const keyLog1 = await prisma.keyLog.create({
+    data: {
+      keyNumber: key1.keyNumber,
+      employeeId: employee1.employeeId,
+      keyOut: new Date(),
+      guardId: employee1.employeeId
+    }
+  });
+
+  const keyLog2 = await prisma.keyLog.create({
+    data: {
+      keyNumber: key1.keyNumber,
+      employeeId: employee1.employeeId,
+      keyOut: new Date(),
+      guardId: employee1.employeeId
+    }
+  });
+
+  const keyLog3 = await prisma.keyLog.create({
+    data: {
+      keyNumber: key2.keyNumber,
+      keyOut: new Date(),
+      employeeId: employee1.employeeId,
+      guardId: employee1.employeeId
+    }
+  });
+
+  const keyLog4 = await prisma.keyLog.create({
+    data: {
+      keyNumber: key2.keyNumber,
+      keyOut: new Date(),
+      employeeId: employee1.employeeId,
       guardId: employee1.employeeId
     }
   });

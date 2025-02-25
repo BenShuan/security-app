@@ -1,4 +1,4 @@
-import { Employee, Prisma, Role } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import prisma from '../prisma';
 import { DepartmentArray } from '../schemes';
 import { handleError } from './utils';

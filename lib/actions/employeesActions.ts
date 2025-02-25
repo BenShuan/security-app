@@ -36,9 +36,8 @@ const validateEmployeeForm = (formData: employeeFormSchemaType) => {
 
 export async function deleteEmployeeAction(employeeId: string) {
   try {
-    console.log(employeeId);
+
     const employee = await deleteEmployee(employeeId);
-    console.log(employee);
 
     revalidatePath('/employees');
     return { success: true, message: 'Employee deleted successfully' };

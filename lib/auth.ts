@@ -1,11 +1,12 @@
 // Delete this entire file
+'use server';
 import { cookies } from 'next/headers';
 import { SignJWT, jwtVerify } from 'jose';
 import { redirect } from 'next/navigation';
 import { saltAndHashPassword } from './utils/password';
 import prisma from './prisma';
-import { Role } from '@prisma/client';
-import { SiteArray } from './schemes';
+import { Role, User } from '@prisma/client';
+import { SiteArray, SiteArrayType } from './schemes';
 
 const secretKey = new TextEncoder().encode(process.env.AUTH_SECRET);
 const cookieName = 'auth-token';
@@ -13,10 +14,11 @@ const cookieName = 'auth-token';
 export async function createToken(
   userId: string,
   userName: string,
-  role: string
+  role: string,
+  site: SiteArrayType
 ) {
   // Create the session token
-  const token = await new SignJWT({ userId, userName, role })
+  const token = await new SignJWT({ userId, userName, role, site })
     .setProtectedHeader({ alg: 'HS256' })
     .setExpirationTime('24h')
     .sign(secretKey);
@@ -42,12 +44,7 @@ export async function getSession() {
 
   try {
     const verified = await jwtVerify(token, secretKey);
-    return verified.payload as {
-      userId: number;
-      userName: string;
-      role: string;
-      site: string;
-    };
+    return verified.payload as User;
   } catch {
     // If token is invalid, delete it
     (await cookies()).delete(cookieName);
@@ -65,20 +62,7 @@ export async function requireAuth() {
   return session;
 }
 
-interface RegisterUserData {
-  email: string;
-  password: string;
-  userName: string;
-  site: string;
-  role: string;
-}
-
-export async function registerUser({
-  password,
-  userName,
-  site,
-  role
-}: RegisterUserData) {
+export async function registerUser({ password, userName, site, role }: User) {
   // Hash the password before storing
   const hashedPassword = await saltAndHashPassword(password);
 
@@ -88,15 +72,18 @@ export async function registerUser({
       data: {
         userName,
         password: hashedPassword,
-        site:site || SiteArray.Values['אור עקיבא'],
-        role:role as Role || 'guard' as Role // default role
+        site: site || SiteArray.Values['אור עקיבא'],
+        role: (role as Role) || ('guard' as Role) // default role
       }
     });
 
-
-
     // Automatically sign in the user after registration
-    await createToken(user.id, user.userName, user.role);
+    await createToken(
+      user.id,
+      user.userName,
+      user.role,
+      user.site as SiteArrayType
+    );
 
     return { success: true, user };
   } catch (error: any) {
@@ -107,3 +94,8 @@ export async function registerUser({
     throw error;
   }
 }
+
+export const checkManeger = async () => {
+  const user = await requireAuth();
+  return user.role !== Role.guard;
+};
