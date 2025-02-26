@@ -52,7 +52,7 @@ const encryptData = async (plainData: string, encryptionKey: string, initVector:
 export const handleEncryption = async (data: any,initVector:string) => {
   return await encryptData(
     JSON.stringify({ data }),
-    process.env.NEXT_PUBLIC_SECRET_KEY!,
+    process.env.NEXT_PUBLIC_ENCRYPT_KEY!,
     initVector
   );
 };
@@ -97,7 +97,7 @@ export const handleDecryption = async ({ encryptedData, initVector }: any) => {
   const decryptedString = await decryptData(
     encryptedData!,
     initVector!,
-    process.env.NEXT_PUBLIC_SECRET_KEY!
+    process.env.NEXT_PUBLIC_ENCRYPT_KEY!
   );
 
   const responseData = JSON.parse(decryptedString)?.data;
