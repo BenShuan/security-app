@@ -2,8 +2,6 @@ import { DataTable } from '@/components/ui/table/data-table';
 import { getContractors } from '@/lib/db/DBContractors';
 import React from 'react';
 import { columns } from './colums';
-import ModalButton from '@/components/modal-button';
-import NewContractorForm from './new-contractor-form';
 import { PlusIcon } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -11,11 +9,6 @@ import { Button } from '@/components/ui/button';
 async function ContractorsTable() {
   const contractors = await getContractors();
 
-  // const addButton = (
-  //   <ModalButton title="הוספת קבלן" icon={<PlusIcon />}  >
-  //     <NewContractor />
-  //   </ModalButton>
-  // );
 
   const addButton = (
     <Button

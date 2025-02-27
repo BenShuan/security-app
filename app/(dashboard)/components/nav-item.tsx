@@ -12,17 +12,19 @@ import { usePathname } from 'next/navigation';
 export function NavItem({
   href,
   label,
+  isAuth,
   children
 }: {
   href: string;
   label: string;
+  isAuth:boolean;
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
 
   return (
-    <Tooltip>
-      <TooltipTrigger asChild>
+    <Tooltip >
+      <TooltipTrigger asChild className={`${!isAuth&&'hidden'}`}>
         <Link
           href={href}
           className={clsx(

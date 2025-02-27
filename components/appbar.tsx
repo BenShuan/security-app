@@ -14,11 +14,6 @@ export function AppBar() {
           alt="logo"
           width={150}
           height={50}
-
-
-
-
-
           className="hidden md:block"
         />
         <Image
@@ -30,10 +25,11 @@ export function AppBar() {
         />
       </Link>
 
-      <h1 className="text-2xl md:text-3xl font-bold text-white flex-1 text-center ">
+      <h1 className="text-2xl md:text-3xl font-bold text-white absolute left-1/2  -translate-x-1/2 text-center ">
         מחלקת ביטחון
       </h1>
-      <DayTime className="hidden md:block" />
+      <div className='flex-1'></div>
+        <DayTime className="hidden md:block" />
 
       <User />
     </header>

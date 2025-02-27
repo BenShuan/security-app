@@ -28,12 +28,16 @@ enum Role {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  userName  String   @unique
+  id        String    @id @default(uuid())
+  userName  String    @unique
   password  String
   site      String
-  role      Role     @default(guard)
-  createdAt DateTime @default(now())
+  email     String
+  role      Role      @default(guard)
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  isActive  Boolean   @default(true)
+  deletedAt DateTime?
 }
 
 model Employee {
@@ -166,7 +170,7 @@ model RideContacts {
   id              String      @id @default(uuid())
   name            String
   phoneNumber     String      @unique
-  rideCompanyName String      
+  rideCompanyName String
   ridesCompany    RideCompany @relation(fields: [rideCompanyName], references: [name], onDelete: Cascade)
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt

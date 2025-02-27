@@ -62,7 +62,13 @@ export async function requireAuth() {
   return session;
 }
 
-export async function registerUser({ password, userName, site, role }: User) {
+export async function registerUser({
+  password,
+  userName,
+  site,
+  role,
+  email
+}: User) {
   // Hash the password before storing
   const hashedPassword = await saltAndHashPassword(password);
 
@@ -71,6 +77,7 @@ export async function registerUser({ password, userName, site, role }: User) {
     const user = await prisma.user.create({
       data: {
         userName,
+        email: email,
         password: hashedPassword,
         site: site || SiteArray.Values['אור עקיבא'],
         role: (role as Role) || ('guard' as Role) // default role
@@ -94,8 +101,3 @@ export async function registerUser({ password, userName, site, role }: User) {
     throw error;
   }
 }
-
-export const checkManeger = async () => {
-  const user = await requireAuth();
-  return user.role !== Role.guard;
-};

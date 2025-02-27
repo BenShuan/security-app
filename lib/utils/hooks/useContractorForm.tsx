@@ -144,11 +144,7 @@ export function useContractorForm() {
         const result = await createContractorAction(values);
 
         if (result.success) {
-          toast.success('קבלן נוסף בהצלחה', {
-            style: {
-              color: 'green'
-            }
-          });
+          toast.success('קבלן נוסף בהצלחה');
           form.reset();
           router.push('/contractors');
         } else {

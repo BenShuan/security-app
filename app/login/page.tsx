@@ -2,13 +2,11 @@ import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { signInAction, signOutAction } from '@/lib/actions/auth';
+import { signInAction } from '@/lib/actions/auth';
 import Image from 'next/image';
 import logo from '../../assets/images/security-logo.png';
 
@@ -16,6 +14,36 @@ import logo from '../../assets/images/security-logo.png';
 
 
 export default async function LoginPage() {
+      // Create admin user
+      // const adminUser = await prisma.user.upsert({
+      //   where:{
+      //     userName:'admin'
+      //   },
+      //   create: {
+      //     userName: 'admin',
+      //     password: await saltAndHashPassword('admin123'),
+      //     role: Role.admin,
+      //     site: 'אור עקיבא',
+      //     email:'benshuan@gmail.com'
+      //   },
+      //   update:{
+      //   }
+      // });
+      
+      // const guardUser = await prisma.user.upsert({
+      //   where:{
+      //     userName:'guard'
+      //   },
+      //   create: {
+      //     userName: 'guard',
+      //     password: await saltAndHashPassword('guard123'),
+      //     role: Role.guard,
+      //     site: 'אור עקיבא',
+      //     email:'benshuan@gmail.com'
+      //   },
+      //   update:{
+      //   }
+      // });
   return (
     <div
       className="min-h-screen flex flex-col justify-between items-center pt-12 
@@ -54,6 +82,7 @@ export default async function LoginPage() {
 
               <Input type="text" name="userName" placeholder="שם משתמש" />
               <Input type="password" name="password" placeholder="סיסמא" />
+
               <Button className="w-full bg-secondary">התחבר</Button>
             </form>
           </CardContent>

@@ -7,37 +7,59 @@ import FormFieldSelect from '@/components/ui/form/form-field-select';
 import {
   passwordFormSchema,
   passwordFormSchemaType,
-  SiteArrayType
+  RoleArrayType,
+  SiteArrayType,
+  userSchema,
+  userSchemaType
 } from '@/lib/schemes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useEffect, useState, useTransition } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { Password } from '@prisma/client';
+import { Password, Role } from '@prisma/client';
 import { updatePasswordAction } from '@/lib/actions/passwordsActions';
+import useAuth from './useAuth';
+import { getUserAction, updateUserAction } from '@/lib/actions/userActions';
 
-interface PasswordFormProps {
-  password: Password | null;
-}
-
-export function usePasswordForm({ password }: PasswordFormProps) {
+export function useUserForm() {
   const router = useRouter();
   const params = useSearchParams();
 
-  const defaultGroup = params.get("group") || password?.group;
+  const { user } = useAuth();
 
-  const [isUpdating, setIsUpdating] = useState(!!password);
+  const isEdit = Boolean(params.get('edit'));
+  const userId = params.get('user-id');
+
+  const [isUpdating, setIsUpdating] = useState(isEdit);
   const [isPending, startTransition] = useTransition();
 
-  const form = useForm<passwordFormSchemaType>({
-    resolver: zodResolver(passwordFormSchema),
+  const form = useForm<userSchemaType>({
+    resolver: zodResolver(userSchema),
     defaultValues: {
-      ...password,
-      group: defaultGroup as string,
-      site: password?.site as SiteArrayType
+      email: '',
+      password: '',
+      role: 'guard',
+      userName: '',
+      site: user?.site as SiteArrayType
     }
   });
+
+  useEffect(() => {
+    getUserAction(userId || '').then(({ success, data }) => {
+      if (success && data) {
+        Object.keys(data).forEach((key) => {
+          form.setValue(
+            key as keyof userSchemaType,
+            data[key as keyof userSchemaType],
+            {
+              shouldValidate: false
+            }
+          );
+        });
+      }
+    });
+  }, []);
 
   const renderField = (attr: any) => {
     return (
@@ -48,8 +70,8 @@ export function usePasswordForm({ password }: PasswordFormProps) {
         render={({ field }) => {
           const updatedField = {
             ...field,
-            maxLength: 30
-            // disabled: !isEdit && attr.key !== 'employeeId'
+            maxLength: 30,
+            disabled: attr.key === 'site' && user?.role !== Role.admin
           };
 
           switch (attr.type) {
@@ -71,16 +93,14 @@ export function usePasswordForm({ password }: PasswordFormProps) {
     );
   };
 
-  function updatePassword(values: passwordFormSchemaType) {
+  function updateUser(values: userSchemaType) {
     startTransition(async () => {
       try {
-        const result = await updatePasswordAction(values);
+        const result = await updateUserAction(values);
 
-        // console.log('result', result)
-        
         if (result.success) {
-          toast.success('סיסמא עודכנה בהצלחה');
-          router.push('/passwords');
+          toast.success('משתמש עודכן בהצלחה');
+          router.push('/users');
         } else {
           throw new Error(result.error);
         }
@@ -94,7 +114,7 @@ export function usePasswordForm({ password }: PasswordFormProps) {
 
   return {
     form,
-    updatePassword,
+    updateUser,
     renderField,
     isUpdating,
     isPending

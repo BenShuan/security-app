@@ -11,56 +11,47 @@ export const columns: ColumnDef<Employee>[] = [
     accessorKey: 'idNumber',
 
     id: 'ת.ז',
-    header: ({ column }) => <Header column={column} title="ת.ז" />
+    header: ({ column }) => <Header column={column} />
   },
   {
     accessorKey: 'firstName',
     id: 'שם פרטי',
-    header: ({ column }) => <Header column={column} title="שם פרטי" />
+    header: ({ column }) => <Header column={column} />
   },
   {
     accessorKey: 'lastName',
     id: 'שם משפחה',
-    header: ({ column }) => <Header column={column} title="שם משפחה" />
+    header: ({ column }) => <Header column={column} />
   },
   {
     accessorKey: 'employeeId',
     id: 'מספר עובד',
-    header: ({ column }) => <Header column={column} title="מספר עובד" />
+    header: ({ column }) => <Header column={column} />
   },
   {
     accessorKey: 'phoneNumber',
     id: 'טלפון',
-    header: ({ column }) => <Header column={column} title="טלפון" />
+    header: ({ column }) => <Header column={column} />
   },
   {
     accessorKey: 'department',
     id: 'מחלקה',
-    header: ({ column }) => <Header column={column} title="מחלקה" />
+    header: ({ column }) => <Header column={column} />
   },
   {
     accessorKey: 'position',
     id: 'תפקיד',
-    header: ({ column }) => <Header column={column} title="תפקיד" />
+    header: ({ column }) => <Header column={column} />
   },
   {
     accessorKey: 'site',
     id: 'אתר',
-    header: ({ column }) => <Header column={column} title="אתר" />
+    header: ({ column }) => <Header column={column} />
   },
-  // {
-  //   accessorKey: 'manager.firstName',
-  //   id: 'מנהל',
-  //   header: ({ column }) => <Header column={column} title="מנהל" />
-  // },
   {
     accessorKey: 'actions',
-    header: ({ column }) => (
-      <div className={'flex items-center space-x-2'}>
-        <p>פעולות</p>
-      </div>
-    ),
     id: 'פעולות',
+    header: ({ column }) => <Header column={column} />,
     cell: ({ row }) => {
       return <EmployeeActions row={row} />;
     }

@@ -1,4 +1,5 @@
-import { date, object, string, z } from 'zod';
+import { Role } from '@prisma/client';
+import { boolean, date, object, string, z } from 'zod';
 
 export const DepartmentArray = z.enum([
   `מופ-רישום מו"פ`,
@@ -81,6 +82,10 @@ export type DepartmentArrayType = z.infer<typeof DepartmentArray>;
 export const SiteArray = z.enum([`אור עקיבא`, `ירושלים`, `יוקנעם`]);
 export type SiteArrayType = z.infer<typeof SiteArray>;
 
+export const RoleArray = z.enum(Object.keys(Role) as [keyof typeof Role]);
+
+export type RoleArrayType = z.infer<typeof RoleArray>;
+
 export const PasswordGroupArray = z.enum([`מחשבים`, `תוכנות`, `מצלמות`, `אחר`]);
 
 export type PasswordGroupArrayType = z.infer<typeof PasswordGroupArray>;
@@ -88,13 +93,24 @@ export type PasswordGroupArrayType = z.infer<typeof PasswordGroupArray>;
 export const signInSchema = object({
   userName: string({ required_error: 'User name is required' })
     .min(1, 'User name is required')
-    .regex(/^[a-zA-Z0-9]+$/, 'Invalid user name'),
+    .regex(/^[a-zA-Z0-9\-]+$/, 'Invalid user name'),
   password: string({ required_error: 'Password is required' })
     .min(1, 'Password is required')
     .min(8, 'Password must be more than 8 characters')
     .max(32, 'Password must be less than 32 characters')
 });
+
 export type signInSchemaType = z.infer<typeof signInSchema>;
+
+export const userSchema = signInSchema.extend({
+  email:z.string().email(),
+  site: SiteArray.default('אור עקיבא'),
+  role: RoleArray,
+  
+});
+
+export type userSchemaType = z.infer<typeof userSchema>;
+
 
 export const employeeFormSchema = z.object({
   idNumber: z
@@ -124,7 +140,7 @@ export const employeeFormSchema = z.object({
   startDate: z.date(),
   department: DepartmentArray.nullable(),
   site: SiteArray.nullable(),
-  managerId: z.string().nullable().optional(),
+  managerId: z.string().nullable().optional()
 });
 
 export type employeeFormSchemaType = z.infer<typeof employeeFormSchema>;
@@ -196,8 +212,8 @@ export const rideLogFormScheme = object({
   employeeId: string(),
   employee: employeeFormSchema.optional(),
   rideCompanyName: string(),
-  manager:string(),
-  guardId:string(),
+  manager: string(),
+  guardId: string(),
   reason: string(),
   action: string()
 });
@@ -205,17 +221,16 @@ export const rideLogFormScheme = object({
 export type rideLogFormSchemeType = z.infer<typeof rideLogFormScheme>;
 
 export const rideCompanyFormScheme = object({
-  name: string({message:'חובה להזין שם'}),
-  areas:string({message:'חובה להזין איזורי עבודה'})
+  name: string({ message: 'חובה להזין שם' }),
+  areas: string({ message: 'חובה להזין איזורי עבודה' })
 });
 
 export type rideCompanyFormSchemeType = z.infer<typeof rideCompanyFormScheme>;
 
 export const rideContactFormScheme = object({
-  name: string({message:'חובה להזין שם'}),
-  phoneNumber:string({message:'חובה להזין פלאפון'}),
-  rideCompanyName:string(),
+  name: string({ message: 'חובה להזין שם' }),
+  phoneNumber: string({ message: 'חובה להזין פלאפון' }),
+  rideCompanyName: string()
 });
 
 export type rideContactFormSchemeType = z.infer<typeof rideContactFormScheme>;
-

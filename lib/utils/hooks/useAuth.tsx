@@ -1,5 +1,7 @@
 'use client';
-import { checkManeger, requireAuth } from '@/lib/auth';
+import { requireAuth } from '@/lib/auth';
+import { checkManeger } from '@/lib/actions/auth';
+import { RoleArray, RoleArrayType } from '@/lib/schemes';
 import { Role, User } from '@prisma/client';
 import { useEffect, useState } from 'react';
 
@@ -19,7 +21,16 @@ const useAuth = () => {
     getUser();
   }, []);
 
+  function getRoleByUserRole(): RoleArrayType[] {
+    const position = RoleArray.options.indexOf(user?.role || 'guard');
+
+    return RoleArray.options.filter(
+      (val, ind) => ind <= position
+    ) as RoleArrayType[];
+  }
+
   return {
+    getRoleByUserRole,
     isManager,
     user
   };

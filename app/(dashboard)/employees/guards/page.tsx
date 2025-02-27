@@ -1,6 +1,6 @@
 import React from 'react';
 import GuardGrid from './components/guard-grid';
-import { checkManeger } from '@/lib/auth';
+import { checkManeger } from '@/lib/actions/auth';
 import { redirect } from 'next/navigation';
 async function GuardsPage() {
   const isManager = await checkManeger();

@@ -14,6 +14,7 @@ import {
 import { EyeIcon } from 'lucide-react';
 import React, { useRef, useState, useTransition } from 'react';
 import { toast } from 'sonner';
+import PasswordForm from './password-form';
 
 function PasswordItem({ password }: { password: Password }) {
   const [openForm, setOpenForm] = useState(false);
@@ -64,10 +65,10 @@ function PasswordItem({ password }: { password: Password }) {
         >
           <EyeIcon />
         </Button>
-        <div className='flex flex-col gap-1'>
-          <p className='font-bold'>{password.name}</p>
-          <p className='font-semibold text-muted-foreground'>{`שם משתמש : ${password.userName}`}</p>
-          <p className='text-muted-foreground'>{`תיאור : ${password.description || ''}`}</p>
+        <div className="flex flex-col gap-1">
+          <p className="font-bold">{password.name}</p>
+          <p className="font-semibold text-muted-foreground">{`שם משתמש : ${password.userName}`}</p>
+          <p className="text-muted-foreground">{`תיאור : ${password.description || ''}`}</p>
         </div>
       </div>
 
@@ -93,9 +94,13 @@ function PasswordItem({ password }: { password: Password }) {
         }}
       >
         <CardContent>
-          <p>{`שם משתמש : ${password.userName}`}</p>
-          <p>{`סיסמה : ${decryptedPassword.password}`}</p>
-          <p>{`סיסמה שניה: ${decryptedPassword.secondPassword}`}</p>
+          <PasswordForm
+            password={{
+              ...password,
+              password: decryptedPassword.password,
+              seconde_password: decryptedPassword.secondPassword
+            }}
+          />
         </CardContent>
       </Modal>
     </>

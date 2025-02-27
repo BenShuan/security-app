@@ -16,6 +16,7 @@ import {
 } from '@/lib/schemes';
 import { useEmployeeForm } from '@/lib/utils/hooks/useEmployeeForm';
 import { usePasswordForm } from '@/lib/utils/hooks/usePasswordForm';
+import { Password } from '@prisma/client';
 
 const PasswordsFields = [
   // Employee fields
@@ -34,12 +35,13 @@ const PasswordsFields = [
 ] as const;
 
 
-function PasswordForm() {
+function PasswordForm({password=null}:{password?:Password|null}) {
  
   const {form,renderField,isPending,isUpdating,updatePassword }=usePasswordForm({
-    password:null
+    password:password
   });
 
+  console.log('password', password)
 
   
   return (
@@ -52,7 +54,7 @@ function PasswordForm() {
         {PasswordsFields.map(renderField)}
         <Button
           type="submit"
-          className="col-span-1 sm:col-span-2 hidden md:block"
+          className="col-span-1 sm:col-span-2 block"
           disabled={isPending}
         >
           {isPending ? 'טוען...' : 'עדכן פרטים'}

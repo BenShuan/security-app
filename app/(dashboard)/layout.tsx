@@ -20,12 +20,14 @@ import DesktopNav from './components/desktop-nav';
 import { Toaster } from '@/components/ui/toast';
 import { Suspense } from 'react';
 import Loader from '@/components/laoder';
+import prisma from '@/lib/prisma';
 
 export default function DashboardLayout({
   children
 }: {
   children: React.ReactNode;
 }) {
+
   return (
     <Providers>
       <main className="flex min-h-screen flex-col ">

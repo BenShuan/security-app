@@ -1,11 +1,7 @@
-'use client';
 
 // Components
 import { Button } from '@/components/ui/button';
-import { Form, FormField } from '@/components/ui/form/form';
-import FormFieldInput from '@/components/ui/form/form-field-input';
-import FormFieldSelect from '@/components/ui/form/form-field-select';
-import FormFieldDate from '@/components/ui/form/form-field-date';
+import { Form } from '@/components/ui/form/form';
 
 // Types and utilities
 import {

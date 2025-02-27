@@ -26,11 +26,11 @@ export default async function PasswordPage() {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-2  gap-x-4 gap-y-4 bg-white border shadow-md p-6 rounded-xl flex-grow   ">
+        <div className="grid md:grid-cols-2  gap-x-4 gap-y-4 bg-white border shadow-md p-6 rounded-xl flex-grow   ">
           {passwords.map((group) => {
             return (
               <div
-                className=" w-5/6 max-w-80 aspect-[1.3/1] m-auto col-span-1 row-span-1 "
+                className=" w-full md:w-5/6 max-w-80 aspect-[1.3/1] m-auto col-span-1 row-span-1 "
                 key={group[0]}
               >
                 <PasswordGroup groupName={group[0]} list={group[1]} />

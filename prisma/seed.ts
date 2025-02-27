@@ -1,3 +1,4 @@
+import { saltAndHashPassword } from '@/lib/utils/password';
 import { PrismaClient, Role } from '@prisma/client';
 
 const prisma = new PrismaClient();
@@ -13,15 +14,6 @@ async function main() {
   await prisma.key.deleteMany();
   await prisma.keyLog.deleteMany();
 
-  // Create admin user
-  const adminUser = await prisma.user.create({
-    data: {
-      userName: 'admin',
-      password: 'admin123', // In production, use hashed passwords
-      role: Role.admin,
-      site: 'אור עקיבא'
-    }
-  });
 
   // Create a manager employee
   const manager = await prisma.employee.create({

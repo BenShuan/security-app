@@ -1,21 +1,14 @@
-'use client';
 
-// React and Next.js imports
-
-// Form libraries
 
 // Components
 import { Button } from '@/components/ui/button';
-import { Form, FormField } from '@/components/ui/form/form';
-import FormFieldInput from '@/components/ui/form/form-field-input';
-import FormFieldSelect from '@/components/ui/form/form-field-select';
+import { Form } from '@/components/ui/form/form';
 
 // Types and utilities
 import {
   DepartmentArray,
   SiteArray
 } from '@/lib/schemes';
-import FormFieldDate from '@/components/ui/form/form-field-date';
 import { useContractorForm } from '@/lib/utils/hooks/useContractorForm';
 
 const contractorWithEmployeeFields = [

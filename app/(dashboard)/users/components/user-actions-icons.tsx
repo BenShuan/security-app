@@ -1,6 +1,4 @@
-import { ClockIcon, PencilIcon } from 'lucide-react';
-import {
-  addMonthToContractorAction} from '@/lib/actions/contractorsActions';
+import {  PencilIcon, Trash2 } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -8,34 +6,39 @@ import {
 } from '@/components/ui/tooltip';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import Link from 'next/link';
+import { deleteUserAction } from '@/lib/actions/userActions';
 import { toast } from 'sonner';
-interface ContractorActionsProps {
+interface UsersActionIconsProps {
   row: {
     original: {
-      employeeId: string;
+      userName:string
     };
   };
 }
 
-export default function ContractorActions({ row }: ContractorActionsProps) {
-  const addMonthToContractor = async () => {
-    await addMonthToContractorAction(row.original.employeeId);
+export default function UsersActionIcons({ row }: UsersActionIconsProps) {
 
-    toast.success('תוקף עודכן בהצלחה');
+  const deleteUser = async () => {
+    const response = await deleteUserAction(row.original.userName);
+    if (response.success) {
+      toast.success(response.message);
+    } else {
+      toast.error(response.message);
+    }
   };
 
   return (
-    <div className="flex justify-between m-0 p-0">
+    <div className="flex justify-center gap-4 m-0 p-0">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger
             className="rounded-full p-1"
-            onClick={addMonthToContractor}
+            onClick={deleteUser}
           >
-            <ClockIcon className="w-4 h-4 text-green-500 " />
+            <Trash2 className="w-4 h-4 text-destructive " />
           </TooltipTrigger>
           <TooltipContent>
-            <p>הוספת חודש לתוקף</p>
+            <p>מחק משתמש</p>
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
@@ -44,7 +47,7 @@ export default function ContractorActions({ row }: ContractorActionsProps) {
         <Tooltip>
           <TooltipTrigger className="rounded-full p-1">
             <Link
-              href={`/contractors/new-contractor?isEdit=true&employeeId=${row.original.employeeId}`}
+              href={`/users/user-form?edit=true&user-id=${row.original.userName}`}
             >
               <PencilIcon className="w-4 h-4" />
             </Link>

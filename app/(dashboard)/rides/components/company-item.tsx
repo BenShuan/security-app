@@ -17,7 +17,7 @@ import { Prisma, RideCompany, Role } from '@prisma/client';
 import { Phone, Trash2 } from 'lucide-react';
 import React from 'react';
 import CompanyContactForm from './company-contact-form';
-import { checkManeger } from '@/lib/auth';
+import { checkManeger } from '@/lib/actions/auth';
 
 const CompanyItem = async ({
   company

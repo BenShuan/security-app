@@ -1,7 +1,7 @@
-import { PrismaClient } from '@prisma/client';
-import { requireAuth } from './auth';
+import { PrismaClient, Role } from '@prisma/client';
+import { getSession, requireAuth } from './auth';
 import { addSiteFilter } from './db/utils';
-import { SiteArrayType } from './schemes';
+import { RoleArray, SiteArray, SiteArrayType } from './schemes';
 
 const prismaClientSingleton = () => {
   return new PrismaClient().$extends({
@@ -82,6 +82,34 @@ const prismaClientSingleton = () => {
           args = addSiteFilter(operation, args, addFilter);
 
           return query(args);
+        }
+      },
+      user: {
+        async $allOperations({ args, model, operation, query }) {
+          try {
+            const user = await getSession();
+
+            const addFilter = {} as any;
+            if (user) {
+              const position = RoleArray.options.indexOf(
+                user.role || RoleArray.enum['guard']
+              );
+              addFilter.role = {
+                in: RoleArray.options.filter(
+                  (val, ind) => ind <= position
+                ) as Role[]
+              };
+              addFilter.site = {
+                in: user.role !== Role.admin ? [user?.site] : SiteArray.options
+              };
+            }
+            args = addSiteFilter(operation, args, addFilter);
+
+            return query(args);
+          } catch (err) {
+            console.log('err', err);
+            return query(args);
+          }
         }
       }
     }
