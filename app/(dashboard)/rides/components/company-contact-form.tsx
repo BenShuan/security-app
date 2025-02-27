@@ -1,13 +1,9 @@
 'use client';
-import ModalButton from '@/components/modal-button';
 import React, { useActionState, useEffect, useState } from 'react';
-import RideCompanyForm from './ride-company-form';
 import { TableCell, TableRow } from '@/components/ui/table/table';
 import {
-  addContactsAction,
-  deleteRideContactAction
-} from '@/lib/actions/ridesActions';
-import { Phone, Plus, Save, Trash2 } from 'lucide-react';
+  addContactsAction} from '@/lib/actions/ridesActions';
+import { Plus, Save } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';

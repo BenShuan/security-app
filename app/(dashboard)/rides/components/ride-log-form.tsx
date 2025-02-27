@@ -1,16 +1,10 @@
 'use client';
 
-// React and Next.js imports
-
-// Form libraries
-
 // Components
 import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form/form';
-import { getAllRidesCompanies } from '@/lib/db/DBRides';
 
 // Types and utilities
-import { DepartmentArray, SiteArray } from '@/lib/schemes';
 import useRideLogForm from '@/lib/utils/hooks/useRideLogForm';
 
 
