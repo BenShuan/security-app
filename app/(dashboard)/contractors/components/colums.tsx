@@ -1,4 +1,4 @@
-
+'use client'
 
 import { Header } from '@/components/ui/table/header';
 import { ColumnDef } from '@tanstack/react-table';
