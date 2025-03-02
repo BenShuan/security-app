@@ -10,12 +10,12 @@ import useKeyLogForm from '@/lib/utils/hooks/useKeyLogForm';
 
 const KeyFields = [
   // Employee fields
-  { key: 'keyNumber', type: 'string', label: 'מספר מפתח' },
-  { key: 'employeeId', type: 'string', label: 'מספר עובד' },
+  { key: 'keyNumber', type: 'string', label: 'מספר מפתח',placeholder:'הכנס מספר מפתח' },
+  { key: 'employeeId', type: 'string', label: 'מספר עובד',placeholder:'הכנס מספר עובד' },
   { key: 'employee.department', type: 'enum', label: 'מחלקה',options:DepartmentArray.options },
   { key: 'employee.firstName', type: 'string', label: 'שם עובד' },
   { key: 'keyOut', type: 'date', label: 'תאריך השאלה' },
-  { key: 'guardId', type: 'string', label: 'מאבטח מטפל' },
+  { key: 'guardId', type: 'string', label: 'מאבטח מטפל',placeholder:'הכנס מספר עובד' },
   
 ] as const;
 

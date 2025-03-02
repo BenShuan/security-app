@@ -10,9 +10,8 @@ import useRideLogForm from '@/lib/utils/hooks/useRideLogForm';
 
 
 function RideLogForm() {
-  const { form, renderField, isPending ,updateRideLog,RideLogFields,createRideLog} =useRideLogForm();
+  const { form, renderField, isPending ,RideLogFields,createRideLog} =useRideLogForm();
 
-  console.log('form', form.formState.errors)
   return (
     <Form {...form}>
       <form

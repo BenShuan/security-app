@@ -60,7 +60,10 @@ export const createRideLog = async (rideLog: Prisma.RideLogCreateInput) => {
       data: rideLog
     });
 
-    return newRideLog;
+    return {
+      success: true,
+      data: newRideLog
+    };
   } catch (error) {
     return handleError(error);
   }
@@ -72,7 +75,9 @@ export const createRideCompany = async (rideComp: Prisma.RideCompanyCreateInput)
       data: rideComp
     });
 
-    return newRideLog;
+    return {
+      success: true,
+      data: newRideLog}
   } catch (error) {
     return handleError(error);
   }
@@ -84,7 +89,10 @@ export const createRideContact = async (rideCont: Prisma.RideContactsCreateInput
       data: rideCont
     });
 
-    return newRideContc;
+    return {
+      success: true,
+      data: newRideContc
+    };
   } catch (error) {
     return handleError(error);
   }
@@ -95,6 +103,24 @@ export const deleteRideContact = async (phoneNumber:string) => {
     const deleteCon = await prisma.rideContacts.delete({
       where:{
         phoneNumber
+      }
+    });
+
+    return {
+      succes:true,
+      data:deleteCon
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+};
+
+export const deleteRideCompany = async (name:string) => {
+  try {
+    console.log('name', name)
+    const deleteCon = await prisma.rideCompany.delete({
+      where:{
+        name
       }
     });
 

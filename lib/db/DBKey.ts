@@ -186,3 +186,22 @@ export const RetriveKeyLog = async (keyNumber: string) => {
     return handleError(error);
   }
 };
+
+export const deleteKey = async (keyNumber: string) => {
+
+  try {
+    const updatedKey = await prisma.key.delete({
+      where: {
+        keyNumber
+      }
+    });
+
+    return {
+      success: true,
+      data: updatedKey
+    };
+  } catch (error) {
+    return handleError(error);
+  }
+
+}

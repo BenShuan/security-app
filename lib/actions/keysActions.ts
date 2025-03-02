@@ -3,6 +3,7 @@ import { Key, Prisma } from '@prisma/client';
 import {
   CreateOrUpdateKey,
   CreateOrUpdateKeyLog,
+  deleteKey,
   getKeyByKeyNumber,
   getKeyLog,
   RetriveKeyLog
@@ -51,6 +52,22 @@ export async function updateKeyAction(formData: keyFormSchemeType) {
       return { success: true, message: 'מפתח נוצר בהצלחה' };
     } else {
       return { success: false, message: 'העדכון נכשל' };
+    }
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: (error as Error).message };
+  }
+}
+
+export async function deleteKeyAction(keyNumber: string) {
+  try {
+    const key = await deleteKey(keyNumber);
+
+    if (key.success) {
+      revalidatePath('/keys');
+      return { success: true, message: 'מפתח נמחק בהצלחה' };
+    } else {  
+      return { success: false, message: 'המפתח לא נמצא' };
     }
   } catch (error) {
     console.error(error);

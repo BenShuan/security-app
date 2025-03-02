@@ -1,3 +1,4 @@
+import { SiteArray } from '@/lib/schemes';
 import { saltAndHashPassword } from '@/lib/utils/password';
 import { PrismaClient, Role } from '@prisma/client';
 
@@ -13,6 +14,7 @@ async function main() {
   await prisma.rideCompany.deleteMany();
   await prisma.key.deleteMany();
   await prisma.keyLog.deleteMany();
+
 
 
   // Create a manager employee

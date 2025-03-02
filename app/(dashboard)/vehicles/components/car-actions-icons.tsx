@@ -34,7 +34,7 @@ export default function CarActionsIcons({ row }: CarActionsIconsProps) {
   return (
     <>
       {isManager && (
-        <div className="flex justify-center m-0 p-0">
+        <div className="flex justify-center gap-2 m-0 p-0">
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger className="rounded-full p-1" onClick={deleteCar}>

@@ -24,6 +24,8 @@ const KeyFields = [
 function KeyForm() {
   const { keyForm, renderField, isPending,updateKey,isUpdating } =useKeyForm();
 
+console.log('keyForm.formState.errors', keyForm.formState.errors)
+
   return (
     <Form {...keyForm}>
       <form
@@ -34,7 +36,7 @@ function KeyForm() {
         <Button
           type="submit"
           className="col-span-1 "
-          disabled={isPending}
+          disabled={isPending }
         >
           {isPending ? 'טוען...' : isUpdating?"עדכן מפתח":"הוסף מפתח"}
         </Button>

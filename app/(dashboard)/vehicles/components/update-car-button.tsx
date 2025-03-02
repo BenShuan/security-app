@@ -4,12 +4,14 @@ import AlertModal from '@/components/alert-modal';
 import { Button } from '@/components/ui/button';
 import { updateCarsAction } from '@/lib/actions/carsActions';
 import { FileScanIcon } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { useRef, useState,useTransition  } from 'react';
 import { toast } from 'sonner';
 
 export default function UpdateCarsButton() {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [isPending,startTransition ] = useTransition();
 
   const [isOpen, setIsOpen] = useState(false);
 
@@ -34,12 +36,14 @@ export default function UpdateCarsButton() {
   };
 
   const handleSubmit = async (formData: FormData) => {
+   startTransition(async () => {
     const result = await updateCarsAction(formData);
     if (result.success) {
       toast.success(result.message);
     } else {
       toast.error(result.message);
     }
+     });
   };
 
   return (
@@ -67,6 +71,7 @@ export default function UpdateCarsButton() {
         variant="secondary"
         className="rounded-full bg-secondary text-white flex items-center gap-2 px-4 py-2 "
         onClick={handleClick}
+        disabled={isPending}
         type="button"
       >
         עדכן מצבה

@@ -35,13 +35,13 @@ function ProfileImage({ imageUrl, alt }: { imageUrl: string; alt: string }) {
   }, [state]);
 
   return (
-    <div className="relative w-full aspect-square border-2 border-foreground/50 rounded-2xl shadow-md group">
+    <div className="relative w-full aspect-square border-2 border-foreground/50 rounded-2xl shadow-md group overflow-hidden">
       <Image
         src={imageUrl}
         alt={alt}
         fill
         sizes="100%"
-        className="h-full object-contain relative  top-0 "
+        className="abolute w-full h-full object-cover relative  top-0 "
       />
       <form
         ref={formRef}
@@ -63,9 +63,9 @@ function ProfileImage({ imageUrl, alt }: { imageUrl: string; alt: string }) {
         onClick={() => {
           inputRef.current?.click();
         }}
-        className="absolute bottom-0 left-0 group-hover:scale-100 scale-0 transition-all duration-300"
+        className="absolute mix-blend-difference bottom-0 left-0 group-hover:scale-100 scale-0 transition-all duration-300"
       >
-        <ImagePlusIcon className="w-6 h-6" />
+        <ImagePlusIcon className="w-6 h-6 text-white " />
       </Button>
     </div>
   );

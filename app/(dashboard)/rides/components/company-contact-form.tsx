@@ -7,6 +7,7 @@ import { Plus, Save } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
+import { Spinner } from '@/components/icons';
 
 const CompanyContactForm = ({ companyName }: { companyName: string }) => {
   const [showFrom, setShowFrom] = useState(false);
@@ -42,8 +43,8 @@ const CompanyContactForm = ({ companyName }: { companyName: string }) => {
               className="p-1 h-7 text-sm placeholder:text-sm"
             />
             <Input name="company" className="hidden" value={companyName} />
-            <Button variant={'ghost'} className="p-1 h-fit" disabled={pending}>
-              <Save className="w-4 h-4" />
+            <Button variant={'ghost'} className="p-1 h-fit relative" disabled={pending}>
+              {!pending?<Save className="w-4 h-4" />:<Spinner />}
             </Button>
           </form>
         ) : (

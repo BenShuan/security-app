@@ -110,7 +110,10 @@ export async function updateEmployees(employees: Prisma.EmployeeCreateInput[]) {
     );
 
 
-    return employeesData;
+    return {
+      success: true,
+      data: employeesData
+    };
   } catch (error) {
     return handleError(error);
   }

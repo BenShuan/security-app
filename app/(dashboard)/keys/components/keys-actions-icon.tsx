@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { toast } from 'sonner';
 import { deleteEmployeeAction } from '@/lib/actions/employeesActions';
 import { Button } from '@/components/ui/button';
-import { retriveKeyLogAction } from '@/lib/actions/keysActions';
+import { deleteKeyAction, retriveKeyLogAction } from '@/lib/actions/keysActions';
 
 interface KeysActionsProps {
   row: {
@@ -25,7 +25,7 @@ interface KeysActionsProps {
 
 export default function KeyActionIcons({ row }: KeysActionsProps) {
   const deleteKey = async () => {
-    const response = await deleteEmployeeAction(row.original.keyNumber);
+    const response = await deleteKeyAction(row.original.keyNumber);
     if (response.success) {
       toast.success(response.message);
     } else {
@@ -43,7 +43,7 @@ export default function KeyActionIcons({ row }: KeysActionsProps) {
   };
 
   return (
-    <div className="flex justify-end gap-1 m-0 p-0">
+    <div className="flex justify-center gap-2 m-0 p-0">
             {row.original?.keyLog[0]?.retrievedAt===null &&<TooltipProvider>
         <Tooltip>
           <TooltipTrigger className="rounded-full p-1">

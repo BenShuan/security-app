@@ -18,13 +18,13 @@ function GuardCard({ guard }: { guard: Prisma.EmployeeGetPayload<{
   };
 }> }) {
   return (
-    <div className="bg-white p-4 rounded-xl aspect-[1/1.2] relative overflow-hidden shadow-md group ">
-      <Image
-        src={guard?.guard?.image?.url || guardImage}
-        alt={guard.firstName}
-        fill
-        className="w-full h-full object-cover rounded-md"
-      />
+    <div className="bg-white p-4 rounded-xl aspect-[1/1.2] overflow-hidden shadow-md group relative">
+        <Image
+          src={guard?.guard?.image?.url || guardImage}
+          alt={guard.firstName}
+          fill
+          className="absolute w-full h-full object-cover rounded-md"
+        />
 
       <div className="absolute -bottom-[56%] h-3/4 group-hover:bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-foreground/100 via-foreground/90 via-75% to-transparent text-white transition-all duration-300">
         <h2 className="text-lg font-bold flex items-center justify-between h-1/4 pb-3">

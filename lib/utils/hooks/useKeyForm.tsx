@@ -33,7 +33,7 @@ function useKeyForm() {
     defaultValues: {
       keyNumber: '',
       description: '',
-      site: undefined 
+      site: user?.site as SiteArrayType 
     }
   });
 
@@ -92,8 +92,11 @@ function useKeyForm() {
           keyForm.setValue('site', result.site as SiteArrayType, {
             shouldValidate: false
           });
+        }else{
+          setIsUpdating(false);
         }
       });
+      
     } catch (error) {
       console.error('Failed to search Key:', error);
     }
@@ -105,10 +108,9 @@ function useKeyForm() {
     startTransition(async () => {
       try {
         values.site=user?.site as SiteArrayType
-        console.log('values', values)
         const result = await updateKeyAction(values);
         if (result.success) {
-          toast.success('מפתח עודכן בהצלחה');
+          toast.success(result.message);
           router.push('/keys');
         } else {
           toast.error('שגיאה', {

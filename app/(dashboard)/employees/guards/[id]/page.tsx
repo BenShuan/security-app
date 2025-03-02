@@ -52,7 +52,7 @@ async function GuardPage({ params }: { params: Promise<{ id: string }> }) {
         </section>
 
         <section className="w-3/4 flex flex-col gap-4 justify-start items-center p-4 ">
-          <Tabs defaultValue="files" className="w-full text-left">
+          <Tabs defaultValue="details" className="w-full text-left">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="files">קבצים</TabsTrigger>
               <TabsTrigger value="details">פרטים</TabsTrigger>

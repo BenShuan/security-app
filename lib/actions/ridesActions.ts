@@ -3,6 +3,7 @@ import {
   createRideCompany,
   createRideContact,
   createRideLog,
+  deleteRideCompany,
   deleteRideContact,
   getCompanysName
 } from '../db/DBRides';
@@ -56,14 +57,14 @@ export async function addRideLogActions(formData: rideLogFormSchemeType) {
 
     revalidatePath('/rides');
 
-    if (employee) {
-      return { success: true, message: 'העדכון בוצע בהצלחה' };
+    if (employee.success) {
+      return { success: true, message: 'נסיעה נוספה בהצלחה' };
     } else {
       return { success: false, message: 'העדכון נכשל' };
     }
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Failed to update employee' };
+    return { success: false, message: 'שגיאה בהוספת נסיעה' };
   }
 }
 
@@ -88,7 +89,7 @@ export async function addContactsAction(
     }
     const contact = await createRideContact({
       name: data.name,
-      phoneNumber: data.phoneNumber,
+      phoneNumber: data.phoneNumber||"",
       ridesCompany:{
         connect:{
           name:data.rideCompanyName
@@ -98,14 +99,14 @@ export async function addContactsAction(
 
     revalidatePath('/rides');
 
-    if (contact) {
-      return { success: true, message: 'העדכון בוצע בהצלחה' };
+    if (contact.success) {
+      return { success: true, message: 'איש קשר נשמר בהצלחה' };
     } else {
       return { success: false, message: 'העדכון נכשל' };
     }
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Failed to update employee' };
+    return { success: false, message: 'הוספת איש קשר נכשלה' };
   }
 }
 
@@ -134,14 +135,14 @@ export async function addRideCompanyAction(
 
     revalidatePath('/rides');
 
-    if (company) {
-      return { success: true, message: 'העדכון בוצע בהצלחה' };
+    if (company.success) {
+      return { success: true, message: 'חברה נוספה בהצלחה' };
     } else {
       return { success: false, message: 'העדכון נכשל' };
     }
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Failed to update employee' };
+    return { success: false, message: 'הוספת חברה נכשלה' };
   }
 }
 
@@ -167,5 +168,25 @@ export async function deleteRideContactAction(phoneNumber: string) {
   } catch (error) {
     console.error(error);
     return { success: false, message: 'לא ניתן למחוק מספר זה' };
+  }
+}
+export async function deleteRideCompanyctAction(phoneNumber: string) {
+  try {
+    console.log(phoneNumber);
+
+    const deletetCompany = await deleteRideCompany(phoneNumber);
+
+    revalidatePath('/rides');
+    if (deletetCompany.data?.id) {
+      return {
+        success: true,
+        message: 'החברה נמחק בהצלחה'
+      };
+    }
+
+    throw Error();
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'לא ניתן חברה מספר זה' };
   }
 }

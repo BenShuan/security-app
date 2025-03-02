@@ -3,7 +3,7 @@ import FormFieldDate from '@/components/ui/form/form-field-date';
 import FormFieldInput from '@/components/ui/form/form-field-input';
 import FormFieldSelect from '@/components/ui/form/form-field-select';
 import { searchEmployeeAction } from '@/lib/actions/employeesActions';
-import { retriveKeyLogAction, searchKeyLogAction, updateKeyLogAction } from '@/lib/actions/keysActions';
+import { getKeyByKeyNumberAction, retriveKeyLogAction, searchKeyLogAction, updateKeyLogAction } from '@/lib/actions/keysActions';
 import { DepartmentArrayType, keyLogFormScheme, keyLogFormSchemeType } from '@/lib/schemes';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -52,7 +52,8 @@ const keyLogForm = useForm<keyLogFormSchemeType>({
               }
             },
             maxLength: 30,
-            disabled: attr.key.startsWith('employee.')
+            disabled: attr.key.startsWith('employee.'),
+            placeholder:attr.placeholder|| attr.label 
           };
             switch (attr.type) {
             case 'enum':
@@ -76,6 +77,8 @@ const keyLogForm = useForm<keyLogFormSchemeType>({
   const searchEmployee = async (searchQuery: string) => {
     try {
       startTransition(async () => {
+
+
         const result = await searchEmployeeAction(searchQuery);
 
         console.log('result', result)
@@ -97,6 +100,12 @@ const keyLogForm = useForm<keyLogFormSchemeType>({
   const searchKey = async (searchQuery: string) => {
     try {
       startTransition(async () => {
+        const key = await getKeyByKeyNumberAction(searchQuery);  
+        if (!key) {
+          toast.error('לא קיים מפתח מספר ' + searchQuery);
+          keyLogForm.setValue('keyNumber', "");
+          return;
+        }
         const result = await searchKeyLogAction(searchQuery);
 
         console.log('result', result)

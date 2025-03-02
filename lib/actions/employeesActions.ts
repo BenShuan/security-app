@@ -1,10 +1,20 @@
 'use server';
 
 import { Employee, Prisma } from '@prisma/client';
-import { deleteEmployee, getAllEmployees, getEmployeeByEmployeeId, updateEmployees, updateGuard } from '../db/DBEmployee';
+import {
+  deleteEmployee,
+  getAllEmployees,
+  getEmployeeByEmployeeId,
+  updateEmployees,
+  updateGuard
+} from '../db/DBEmployee';
 import { revalidatePath } from 'next/cache';
 import { convertToEmployee, readCsvFile } from '../utils/fileReader';
-import { contractorFormSchema, guardFormSchema, guardFormSchemaType } from '../schemes';
+import {
+  contractorFormSchema,
+  guardFormSchema,
+  guardFormSchemaType
+} from '../schemes';
 import { employeeFormSchema } from '../schemes';
 import { employeeFormSchemaType } from '../schemes';
 
@@ -16,27 +26,26 @@ const validateEmployeeForm = (formData: employeeFormSchemaType) => {
   return {
     success: employeeData.success,
     errors: {
-      employee: employeeData.error,
+      employee: employeeData.error
     }
-    };
   };
+};
 
-  const validateGuardForm = (formData: guardFormSchemaType) => {
-    const guardData = guardFormSchema.safeParse({
-      ...formData
-    });
+const validateGuardForm = (formData: guardFormSchemaType) => {
+  const guardData = guardFormSchema.safeParse({
+    ...formData
+  });
 
-    return {
-      success: guardData.success,
-      errors: {
-        guard: guardData.error,
-      }
-    };
-  }
+  return {
+    success: guardData.success,
+    errors: {
+      guard: guardData.error
+    }
+  };
+};
 
 export async function deleteEmployeeAction(employeeId: string) {
   try {
-
     const employee = await deleteEmployee(employeeId);
 
     revalidatePath('/employees');
@@ -51,14 +60,17 @@ export async function updateEmployeesAction(formData: FormData) {
   try {
     const file = formData.get('file') as File;
 
-    await readCsvFile(file,async (employees) => {
-      const employeesData = convertToEmployee(employees.data);
-      const updatedEmployees = await updateEmployees(employeesData);
-    });
-    
-    revalidatePath('/employees');
-    return { success: true, message: 'העדכון בוצע בהצלחה' };
+    const employeeRows = (await readCsvFile(file, async () => {})) as any;
+    const employeesData = convertToEmployee(employeeRows?.data);
+    const updatedEmployees = await updateEmployees(employeesData);
 
+    if (updatedEmployees.success) {
+      revalidatePath('/employees');
+      return { success: true, message: 'רשימת העובדים עודכנה בהצלחה' };  
+      
+    }
+
+    return { success: false, message: 'לא ניתן לעדכן עובדים' };
   } catch (error) {
     console.error(error);
     return { success: false, message: 'העדכון נכשל' };
@@ -71,8 +83,8 @@ export async function updateEmployeeAction(formData: employeeFormSchemaType) {
     if (!employeeData.success) {
       return { success: false, message: 'הטופס מכיל שגיאות' };
     }
-    
-    const employee = await updateEmployees([ formData]);
+
+    const employee = await updateEmployees([formData]);
     if (employee) {
       return { success: true, message: 'העדכון בוצע בהצלחה' };
     } else {
@@ -106,7 +118,11 @@ export async function updateGuardAction(formData: guardFormSchemaType) {
       return { success: false, message: 'הוזנו שגיאות בטופס' };
     }
 
-    const guard = await updateGuard(formData as Prisma.EmployeeCreateInput & {guard: Prisma.GuardCreateInput});
+    const guard = await updateGuard(
+      formData as Prisma.EmployeeCreateInput & {
+        guard: Prisma.GuardCreateInput;
+      }
+    );
     if (guard) {
       revalidatePath('/employees/guards');
       return { success: true, message: 'העדכון בוצע בהצלחה' };

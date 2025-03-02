@@ -90,21 +90,21 @@ export function useCarForm() {
         if (result.success) {
           form.setValue(
             'employee.firstName',
-            result.data?.employee.firstName || '',
+            result.data?.employee?.firstName || '',
             {
               shouldValidate: false
             }
           );
           form.setValue(
             'employee.lastName',
-            result.data?.employee.lastName || '',
+            result.data?.employee?.lastName || '',
             {
               shouldValidate: false
             }
           );
           form.setValue(
             'employee.phoneNumber',
-            result.data?.employee.phoneNumber || '',
+            result.data?.employee?.phoneNumber || '',
             {
               shouldValidate: false
             }

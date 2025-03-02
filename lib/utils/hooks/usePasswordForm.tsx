@@ -7,6 +7,7 @@ import FormFieldSelect from '@/components/ui/form/form-field-select';
 import {
   passwordFormSchema,
   passwordFormSchemaType,
+  PasswordGroupArrayType,
   SiteArrayType
 } from '@/lib/schemes';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -34,7 +35,7 @@ export function usePasswordForm({ password }: PasswordFormProps) {
     resolver: zodResolver(passwordFormSchema),
     defaultValues: {
       ...password,
-      group: defaultGroup as string,
+      group: defaultGroup as PasswordGroupArrayType,
       site: password?.site as SiteArrayType
     }
   });

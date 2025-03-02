@@ -30,18 +30,22 @@ export function useGuardForm(
   const form = useForm<guardFormSchemaType>({
     resolver: zodResolver(guardFormSchema),
     defaultValues: {
-      ...guard,
+      idNumber: guard.idNumber || '',
+      firstName: guard.firstName || '',
+      lastName: guard.lastName || '',
+      employeeId: guard.employeeId || '',
+      phoneNumber: guard.phoneNumber || null,
+      email: guard.email || null,
+      startDate: guard.startDate || new Date(),
+      department: guard.department as DepartmentArrayType || null,
+      site: guard.site as SiteArrayType || null,
+      managerId: guard.managerId || null,
+      address: guard.address || "",
       guard: {
-        ...guard.guard,
-        lastCourse: guard.guard?.lastCourse
-          ? new Date(guard.guard.lastCourse)
-          : null,
-        nextCourse: guard.guard?.nextCourse
-          ? new Date(guard.guard.nextCourse)
-          : null
-      },
-      department: guard.department as DepartmentArrayType,
-      site: guard.site as SiteArrayType
+        lastCourse: guard.guard?.lastCourse || null,
+        nextCourse: guard.guard?.nextCourse || null,
+        imageUrl: guard.guard?.imageUrl || null
+      }
     }
   });
 

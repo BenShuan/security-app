@@ -31,7 +31,7 @@ export default function EmployeeActions({ row }: EmployeeActionsProps) {
   };
 
   return (
-    <div className="flex justify-between m-0 p-0">
+    <div className="flex justify-center gap-2 m-0 p-0">
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger

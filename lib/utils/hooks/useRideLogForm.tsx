@@ -3,7 +3,10 @@ import FormFieldDate from '@/components/ui/form/form-field-date';
 import FormFieldInput from '@/components/ui/form/form-field-input';
 import FormFieldSelect from '@/components/ui/form/form-field-select';
 import { searchEmployeeAction } from '@/lib/actions/employeesActions';
-import { addRideLogActions, companiesNamesActions } from '@/lib/actions/ridesActions';
+import {
+  addRideLogActions,
+  companiesNamesActions
+} from '@/lib/actions/ridesActions';
 import { getCompanysName } from '@/lib/db/DBRides';
 import {
   DepartmentArray,
@@ -60,10 +63,11 @@ export default function useRideLogForm() {
       key: 'rideCompanyName',
       type: 'enum',
       label: 'חברת הסעות',
-      options: list
+      options: list,
+      placeholder:'יש לבחור חברת הסעות'
     },
-    { key: 'manager', type: 'string', label: 'מנהל', disabled: true },
-    { key: 'guardId', type: 'string', label: 'מאבטח' },
+    { key: 'manager', type: 'string', label: 'מנהל' },
+    { key: 'guardId', type: 'string', label: 'מאבטח' ,placeholder:'יש להזין מספר עובד'},
     { key: 'action', type: 'string', label: 'פעולה' },
     { key: 'reason', type: 'string', label: 'סיבה' }
   ] as const;
@@ -77,7 +81,7 @@ export default function useRideLogForm() {
       reason: '',
       employee: {
         firstName: '',
-        department: '' as DepartmentArrayType
+        department: '' as DepartmentArrayType,
       },
       rideCompanyName: '',
       manager: ''
@@ -96,13 +100,15 @@ export default function useRideLogForm() {
             onBlur: async (e: React.FocusEvent<HTMLInputElement>) => {
               field.onBlur(); // Call the original onBlur
               if (attr.key === 'employeeId') {
-                await searchKey(e.currentTarget.value); // Call your custom handler
+                await searchEmployee(e.currentTarget.value); // Call your custom handler
                 console.log(form.getValues());
               }
             },
             maxLength: 30,
-            disabled: attr.disabled
+            disabled: attr.disabled,
+            placeholder: attr.placeholder|| `יש להזין ${attr.label}`
           };
+
 
           switch (attr.type) {
             case 'enum':
@@ -123,7 +129,12 @@ export default function useRideLogForm() {
     );
   };
 
-  const searchKey = async (searchQuery: string) => {
+  const searchEmployee = async (searchQuery: string) => {
+
+    if (searchQuery.length ===0) {
+      return
+    }
+
     try {
       startTransition(async () => {
         const result = await searchEmployeeAction(searchQuery);
@@ -139,50 +150,28 @@ export default function useRideLogForm() {
           Object.keys(employeeData).forEach((key) => {
             form.setValue(
               `employee.${key as keyof employeeFormSchemaType}`,
-              employeeData[key as keyof employeeFormSchemaType],
-              {
-                shouldValidate: false
-              }
+              employeeData[key as keyof employeeFormSchemaType]
             );
           });
 
-          form.setValue(`manager`, employeeData.manager, {
-            shouldValidate: false
-          });
+          form.setValue(`manager`, employeeData.manager);
+        } else {
+          toast.error('לא נמצא עובד עם מספר עובד זה');
         }
       });
     } catch (error) {
-      console.error('Failed to search KeyLog:', error);
+      console.error('Failed to search Ride Log:', error);
+      toast.error('לא נמצא עובד עם מספר עובד זה');
     }
   };
 
-  function updateRideLog(values: rideLogFormSchemeType) {
-    startTransition(async () => {
-      try {
-        // const result = await updateKeyLogAction(values);
-        // if (result.success) {
-        //   toast.success('מפתח עודכן בהצלחה');
-        //   router.push('/keys');
-        // } else {
-        //   toast.error('שגיאה', {
-        //     description: result.message
-        //   });
-        // }
 
-        form.reset();
-      } catch (error) {
-        toast.error('שגיאה', {
-          description: error instanceof Error ? error.message : 'קרתה תקלה'
-        });
-      }
-    });
-  }
- function createRideLog(values: rideLogFormSchemeType) {
+  function createRideLog(values: rideLogFormSchemeType) {
     startTransition(async () => {
       try {
         const result = await addRideLogActions(values);
         if (result.success) {
-          toast.success('נסיעה נוספה בהצלחה');
+          toast.success(result.message);
           router.push('/rides');
         } else {
           toast.error('שגיאה', {
@@ -202,8 +191,7 @@ export default function useRideLogForm() {
   return {
     form,
     isPending,
-    searchKey,
-    updateRideLog,
+    searchEmployee,
     createRideLog,
     renderField,
     RideLogFields

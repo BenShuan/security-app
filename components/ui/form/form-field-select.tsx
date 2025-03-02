@@ -30,7 +30,7 @@ function FormFieldSelect({
       >
         <FormControl>
           <SelectTrigger className="bg-white text-right ">
-            <SelectValue placeholder={label} />
+            <SelectValue placeholder={field.placeholder} />
           </SelectTrigger>
         </FormControl>
         <SelectContent>
