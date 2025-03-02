@@ -1,4 +1,3 @@
-import useGeoLocation from '@/lib/utils/hooks/useGeoLocation';
 import './globals.css';
 
 import { Analytics } from '@vercel/analytics/react';
@@ -14,7 +13,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   
-  await useGeoLocation();
 
   return (
     <html lang="he" dir="rtl">
