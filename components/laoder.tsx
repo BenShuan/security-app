@@ -5,7 +5,7 @@ import logoMobile from '../assets/images/security-logo-no-slogen.png';
 
 function Loader() {
   return (
-    <div className='absolute w-full h-full backdrop-blur-sm flex justify-center items-center content-center  bg-white/50'>
+    <div className='absolute top-0 right-0  w-full h-full backdrop-blur-sm flex justify-center items-center content-center  bg-white/50'>
       <Image
           src={logoMobile.src}
           alt="logo"

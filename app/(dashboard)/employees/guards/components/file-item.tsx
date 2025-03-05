@@ -10,7 +10,7 @@ async function FileItem({ file }: { file: File }) {
   const deleteFile = deleteFileAction.bind(null, file.id);
 
   return (
-      <div className="w-24 aspect-square relative overflow-hidden rounded-md group shadow-lg">
+      <div className="w-24 h-24 relative overflow-hidden rounded-md group shadow-lg">
       <Image
         src={file.url}
         alt={file.name}

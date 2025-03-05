@@ -22,18 +22,17 @@ const DeleteCompanyButton = ({ companyName }: { companyName: string }) => {
     });
   };
   return (
-    <Button
-      variant={'link'}
+    <div
       className="rounded-full absolute p-0 h-4 w-4 opacity-0 group-hover:opacity-100 top-0 left-0 transition-all duration-300 "
-      onClick={deleteRideCompany}
-      disabled={isPending}
+      onClick={!isPending?deleteRideCompany:undefined}
+      // disabled={isPending}
     >
       {!isPending ? (
         <Trash2 className="w-4 h-4 text-destructive " />
       ) : (
         <Spinner />
       )}
-    </Button>
+    </div>
   );
 };
 

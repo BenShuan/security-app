@@ -1,9 +1,7 @@
 import { Prisma } from '@prisma/client';
 import prisma from '../prisma';
 import { DepartmentArray } from '../schemes';
-import { handleError } from './utils';
-
-
+import { DBResponseHandler } from './utils';
 
 export async function createEmployee(employeeData: Prisma.EmployeeCreateInput) {
   try {
@@ -18,23 +16,13 @@ export async function createEmployee(employeeData: Prisma.EmployeeCreateInput) {
         }
       });
     }
-    return employee;
+    return DBResponseHandler(employee, null);
   } catch (error) {
-    return handleError(error);
+    return DBResponseHandler(null, error);
   }
 }
 
-export async function getEmployeeByEmployeeId(
-  employeeId: string
-): Promise<null | {
-  success: boolean;
-  error?: string;
-  data?: Prisma.EmployeeGetPayload<{
-    include: {
-      manager: true;
-    };
-  }> | null;
-}> {
+export async function getEmployeeByEmployeeId(employeeId: string) {
   try {
     const employee = await prisma.employee.findUnique({
       where: { employeeId },
@@ -42,21 +30,13 @@ export async function getEmployeeByEmployeeId(
         manager: true
       }
     });
-    return { success: true, data: employee };
+    return DBResponseHandler(employee, null);
   } catch (error) {
-    return handleError(error);
+    return DBResponseHandler(null, error);
   }
 }
 
-export async function getEmployeeByIdNumber(idNumber: string): Promise<null | {
-  success: boolean;
-  error?: string;
-  data?: Prisma.EmployeeGetPayload<{
-    include: {
-      manager: true;
-    };
-  }> | null;
-}> {
+export async function getEmployeeByIdNumber(idNumber: string) {
   try {
     const employee = await prisma.employee.findUnique({
       where: { idNumber },
@@ -64,9 +44,9 @@ export async function getEmployeeByIdNumber(idNumber: string): Promise<null | {
         manager: true
       }
     });
-    return { success: true, data: employee };
+    return DBResponseHandler(employee, null);
   } catch (error) {
-    return handleError(error);
+    return DBResponseHandler(null, error);
   }
 }
 
@@ -85,8 +65,6 @@ export async function getAllEmployees() {
 
 export async function updateEmployees(employees: Prisma.EmployeeCreateInput[]) {
   try {
-    console.log(employees);
-
     const employeesData = await Promise.all(
       employees.map(async (employee) => {
         const updatedEmployee = await prisma.employee.upsert({
@@ -99,7 +77,7 @@ export async function updateEmployees(employees: Prisma.EmployeeCreateInput[]) {
           await prisma.guard.upsert({
             where: { employeeId: employee.employeeId },
             create: {
-              employeeId: employee.employeeId,
+              employeeId: employee.employeeId
             },
             update: {}
           });
@@ -109,13 +87,9 @@ export async function updateEmployees(employees: Prisma.EmployeeCreateInput[]) {
       })
     );
 
-
-    return {
-      success: true,
-      data: employeesData
-    };
+    return DBResponseHandler(employeesData, null);
   } catch (error) {
-    return handleError(error);
+    return DBResponseHandler(null, error);
   }
 }
 
@@ -124,26 +98,13 @@ export async function deleteEmployee(employeeId: string) {
     const employee = await prisma.employee.delete({
       where: { employeeId: employeeId }
     });
-    return employee;
+    return DBResponseHandler(employee, null);
   } catch (error) {
-    console.log('error', error);
-    return handleError(error);
+    return DBResponseHandler(null, error);
   }
 }
 
-export async function getGuards(): Promise<null | {
-  success: boolean;
-  error?: string | null;
-  data?: Prisma.EmployeeGetPayload<{
-    include: {
-      guard: {
-        include: {
-          image: true
-        }
-      };
-    };
-  }>[];
-}> {
+export async function getGuards() {
   try {
     const guards = await prisma.employee.findMany({
       where: {
@@ -157,15 +118,16 @@ export async function getGuards(): Promise<null | {
         }
       }
     });
-    return { success: true, data: guards, error: null };
+    return DBResponseHandler(guards, null);
   } catch (error) {
-    return handleError(error);
+    return DBResponseHandler(null, error);
   }
 }
 
-
 export async function updateGuard(
-  guard: Prisma.EmployeeCreateInput & {guard: Prisma.GuardCreateInput | Prisma.GuardUpdateInput}
+  guard: Prisma.EmployeeCreateInput & {
+    guard: Prisma.GuardCreateInput | Prisma.GuardUpdateInput;
+  }
 ) {
   try {
     const updatedGuard = await prisma.employee.update({
@@ -176,9 +138,9 @@ export async function updateGuard(
           upsert: {
             where: { employeeId: guard.employeeId },
             create: {
-              ...guard.guard as Prisma.GuardCreateInput,
+              ...(guard.guard as Prisma.GuardCreateInput),
               createdAt: new Date(),
-              updatedAt: new Date(),
+              updatedAt: new Date()
             },
             update: guard.guard as Prisma.GuardUpdateInput
           }
@@ -188,37 +150,47 @@ export async function updateGuard(
         guard: true
       }
     });
-    return updatedGuard;
+    
+    return DBResponseHandler(updatedGuard, null);
   } catch (error) {
-    return handleError(error);
+    return DBResponseHandler(null, error);
   }
 }
 
-
-export async function findOrCreateGuard(employeeId:string){
+export async function getGuard(employeeId: string) {
   try {
-
-    let guard=await prisma.guard.findUnique({
-      where:{
+    const guard = await prisma.employee.findUnique({
+      where: {
         employeeId
+      },
+      include: {
+        guard: true
       }
-    })
+    });
+    return DBResponseHandler(guard, null);
+  } catch (error) {
+    return DBResponseHandler(null, error);
+  }
+}
 
-    if(!guard){
-      guard =await prisma.guard.create({
-        data:{
+export async function findOrCreateGuard(employeeId: string) {
+  try {
+    let guard = await prisma.guard.findUnique({
+      where: {
+        employeeId
+      },
+ 
+    });
+
+    if (!guard) {
+      guard = await prisma.guard.create({
+        data: {
           employeeId
         }
-      })
-
+      });
     }
-    return {
-      success:true,
-      data:guard
-    }
+    return DBResponseHandler(guard, null);
   } catch (error) {
-    return {...handleError(error),
-      data:null
-    }
+    return DBResponseHandler(null, error);
   }
-} 
+}

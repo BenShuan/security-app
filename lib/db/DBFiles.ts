@@ -1,5 +1,5 @@
 import prisma from "../prisma"
-import { handleError } from '@/lib/db/utils'
+import { DBResponseHandler, handleError } from '@/lib/db/utils'
 import { Prisma } from '@prisma/client'
 import { findOrCreateGuard } from "./DBEmployee"
 
@@ -50,20 +50,31 @@ export const createFiles=async(files:Prisma.FileCreateManyInput[])=>{
       data:files
     })
 
-  // const newFiles=await prisma.guard.update({
-  //     where:{
-  //       employeeId:guard.data?.employeeId
-  //     },
-  //     data:{
-  //       files:{
-  //         createMany:{
-  //           data:files
-  //         }
-  //       }
-  //   }})
 
-    return {success:true,data:newFiles} 
+    return DBResponseHandler(newFiles,null)
   } catch (error) {
-    return handleError(error)
+    return DBResponseHandler(null,error)
+  }
+}
+
+export const createMustFiles=async(files:Prisma.GuardMustFilesCreateInput)=>{
+  try {
+  
+    const deleteFile = await prisma.guardMustFiles.deleteMany({
+      where:{
+        file:{
+          name:files.file.create?.name,
+        }
+      }
+    })
+
+    const newFiles=await prisma.guardMustFiles.create({
+      data:files
+    })
+
+
+    return DBResponseHandler(newFiles,null)
+  } catch (error) {
+    return DBResponseHandler(null,error)
   }
 }

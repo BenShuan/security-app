@@ -5,6 +5,7 @@ import { RoleArray, SiteArray, SiteArrayType } from './schemes';
 
 const prismaClientSingleton = () => {
   return new PrismaClient().$extends({
+
     query: {
       employee: {
         async $allOperations({ args, model, operation, query }) {
@@ -14,7 +15,6 @@ const prismaClientSingleton = () => {
             site: user.site
           };
           args = addSiteFilter(operation, args, addFilter);
-          console.log('args', args);
           return query(args);
         }
       },

@@ -1,7 +1,8 @@
 import { error } from 'console';
 import prisma from '../prisma';
 import { handleError } from './utils';
-import { User } from '@prisma/client';
+import { Prisma, User } from '@prisma/client';
+import { sendEmail } from '../utils/nodeMailer';
 
 export const getUserFromDb = async (userName: string) => {
   try {
@@ -15,6 +16,8 @@ export const getUserFromDb = async (userName: string) => {
     if (!user) {
       throw new Error('User not found');
     }
+
+
     return {
       success:true,
       data:user,
@@ -64,12 +67,14 @@ export const createOrUpdateUser = async (user: User) => {
       },
       create:user,
       update:{
-        ...user
+        ...user,
+        deletedAt:null,
+        isActive:true
       }
     });
     console.log('newUser', newUser)
 
-    
+
     return {
       success:true,
       data:newUser,
@@ -82,7 +87,17 @@ export const createOrUpdateUser = async (user: User) => {
 
 };
 
-export const getAllUsers = async () => {
-  const users = await prisma.user.findMany();
-  return users;
+export const getAllUsers = async (filter?:Prisma.UserWhereInput) => {
+  const users = await prisma.user.findMany({
+    where:{
+      ...filter,
+      deletedAt:null,
+      isActive:true,
+    },
+    omit:{
+      password:true
+    }
+    
+  });
+  return users as User[];
 };

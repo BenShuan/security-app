@@ -1,10 +1,11 @@
 'use server';
 
-import { Employee, Prisma } from '@prisma/client';
+import { Employee, Guard, Prisma } from '@prisma/client';
 import {
   deleteEmployee,
   getAllEmployees,
   getEmployeeByEmployeeId,
+  getGuard,
   updateEmployees,
   updateGuard
 } from '../db/DBEmployee';
@@ -17,6 +18,11 @@ import {
 } from '../schemes';
 import { employeeFormSchema } from '../schemes';
 import { employeeFormSchemaType } from '../schemes';
+import { ActionResponseHandler } from './utils';
+import { RecurrenceRule } from 'node-schedule';
+import SchedulingService from '../utils/schedulingService';
+import { date } from 'zod';
+import { guardCourseReminder } from '../db/scheduleJobs';
 
 const validateEmployeeForm = (formData: employeeFormSchemaType) => {
   const employeeData = employeeFormSchema.safeParse({
@@ -49,10 +55,13 @@ export async function deleteEmployeeAction(employeeId: string) {
     const employee = await deleteEmployee(employeeId);
 
     revalidatePath('/employees');
-    return { success: true, message: 'Employee deleted successfully' };
+    if (!employee.success) {
+      throw new Error('לא ניתן למחוק עובד זה');
+    }
+
+    return ActionResponseHandler(true, 'עובד נמחק בהצלחה', employee.data);
   } catch (error) {
-    console.error(error);
-    return { success: false, message: 'Failed to delete employee' };
+    return ActionResponseHandler(false, 'לא ניתן למחוק עובד זה', null);
   }
 }
 
@@ -66,14 +75,16 @@ export async function updateEmployeesAction(formData: FormData) {
 
     if (updatedEmployees.success) {
       revalidatePath('/employees');
-      return { success: true, message: 'רשימת העובדים עודכנה בהצלחה' };  
-      
+      return ActionResponseHandler(
+        true,
+        'עובדים עודכנו בהצלחה',
+        updatedEmployees.data
+      );
     }
 
-    return { success: false, message: 'לא ניתן לעדכן עובדים' };
+    throw new Error('העדכון נכשל');
   } catch (error) {
-    console.error(error);
-    return { success: false, message: 'העדכון נכשל' };
+    return ActionResponseHandler(false, 'העדכון נכשל', null);
   }
 }
 
@@ -81,32 +92,35 @@ export async function updateEmployeeAction(formData: employeeFormSchemaType) {
   try {
     const employeeData = validateEmployeeForm(formData);
     if (!employeeData.success) {
-      return { success: false, message: 'הטופס מכיל שגיאות' };
+      return ActionResponseHandler(false, 'הטופס מכיל שגיאות', null);
     }
 
     const employee = await updateEmployees([formData]);
-    if (employee) {
-      return { success: true, message: 'העדכון בוצע בהצלחה' };
+    if (employee.success) {
+      return ActionResponseHandler(true, 'העדכון בוצע בהצלחה', employee.data);
     } else {
-      return { success: false, message: 'העדכון נכשל' };
+      throw new Error('העדכון נכשל');
     }
   } catch (error) {
     console.error(error);
-    return { success: false, message: 'Failed to update employee' };
+    return ActionResponseHandler(false, 'העדכון נכשל', null);
   }
 }
 
 export async function searchEmployeeAction(searchQuery: string) {
   try {
     const employee = await getEmployeeByEmployeeId(searchQuery);
-    if (employee?.success) {
-      return { success: true, data: employee.data };
+    if (employee.success) {
+      return ActionResponseHandler(true, 'נמצא עובד', employee.data);
     } else {
-      return { success: false, message: employee?.error };
+      throw new Error('לא נמצא עובד עם מספר נתונים אלו');
     }
   } catch (error) {
-    console.error(error);
-    return { success: false, message: 'Failed to search employee' };
+    return ActionResponseHandler(
+      false,
+      'לא נמצא עובד עם מספר נתונים אלו',
+      null
+    );
   }
 }
 
@@ -115,7 +129,14 @@ export async function updateGuardAction(formData: guardFormSchemaType) {
     const guardData = validateGuardForm(formData);
 
     if (!guardData.success) {
-      return { success: false, message: 'הוזנו שגיאות בטופס' };
+      return ActionResponseHandler(false, 'הטופס מכיל שגיאות', null);
+    }
+
+    if (formData.guard.lastCourse) {
+      formData.guard.nextCourse = new Date(formData.guard.lastCourse);
+      formData.guard.nextCourse.setMonth(
+        formData.guard.nextCourse.getMonth() + 6
+      );
     }
 
     const guard = await updateGuard(
@@ -123,14 +144,17 @@ export async function updateGuardAction(formData: guardFormSchemaType) {
         guard: Prisma.GuardCreateInput;
       }
     );
-    if (guard) {
+    if (guard.success && guard.data) {
+      guardCourseReminder(
+        guard.data as Prisma.EmployeeGetPayload<{include: {guard: true}}>
+      );
+
       revalidatePath('/employees/guards');
-      return { success: true, message: 'העדכון בוצע בהצלחה' };
-    } else {
-      return { success: false, message: 'העדכון נכשל' };
+      return ActionResponseHandler(true, 'השמירה בוצעה בהצלחה', guard.data);
     }
+
+    throw new Error('השמירה נכשלה');
   } catch (error) {
-    console.error(error);
-    return { success: false, message: 'העדכון נכשל' };
+    return ActionResponseHandler(false, 'השמירה נכשלה', null);
   }
 }
