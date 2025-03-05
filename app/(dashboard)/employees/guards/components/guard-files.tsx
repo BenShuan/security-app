@@ -5,7 +5,7 @@ import FileItem from './file-item';
 import MustFileUpload from './must-file-upload';
 import { File } from '@prisma/client';
 
-const mustFilesList: { name: string; }[] = [
+export const mustFilesList: { name: string; }[] = [
   {
     name: 'תעודת-זהות',
   },

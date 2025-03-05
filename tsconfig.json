@@ -31,6 +31,6 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/(dashboard)/contractors/new-contractor"
-  ],
+, "components/email-tamplates/contractor-auth-reminder-email.tsx"  ],
   "exclude": ["node_modules"]
 }

@@ -31,7 +31,7 @@ class SchedulingService implements ISchedulingService {
 
       const job = schedule.scheduleJob(scheduleRule, (data) => {
         console.log(`Running job: ${name}`);
-        jobFunction(); 
+        jobFunction(name); 
       });
     
 

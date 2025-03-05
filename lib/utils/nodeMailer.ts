@@ -29,7 +29,7 @@ export const sendEmail = async (data: EmailData) => {
       to: data.to,
       subject: data.subject,
       text: data.text,
-      html: data.html,
+      html: data.html
     });
 
     console.log('Message sent: %s', info.messageId);

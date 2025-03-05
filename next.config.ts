@@ -1,4 +1,7 @@
 export default {
+  publicRuntimeConfig: {
+    baseUrl: process.env.NEXT_PUBLIC_BASE_URL || 'https://securety-app.vercel.app',
+  },
   images: {
     remotePatterns: [
       {

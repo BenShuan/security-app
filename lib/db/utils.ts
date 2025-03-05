@@ -43,6 +43,13 @@ export function addSiteFilter(operation: string, args: any, addfilter: any) {
     };
   }
 
-
   return args;
+}
+export function isWithinTwoMonths(
+  targetDate: Date,
+  referenceDate: Date
+): boolean {
+  const twoMonthsFuture = new Date(referenceDate);
+  twoMonthsFuture.setMonth(twoMonthsFuture.getMonth() + 2);
+  return targetDate <= twoMonthsFuture;
 }

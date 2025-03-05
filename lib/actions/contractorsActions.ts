@@ -15,6 +15,7 @@ import {
 import { Employee, Prisma } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import prisma from '../prisma';
+import { contractorAuthReminder } from '../db/scheduleJobs';
 
 const validateContractorForm = (formData: contractorFormSchemaType) => {
   const employeeData = employeeFormSchema.safeParse({
@@ -73,6 +74,8 @@ export async function createContractorAction(
       }
     } as Prisma.ContractorCreateInput);
 
+    contractorAuthReminder(result)
+
     revalidatePath('/contractors');
     return { success: true, contractor: result };
   } catch (error) {
@@ -110,6 +113,8 @@ export async function updateContractorAction(
         include: { employee: true };
       }>
     );
+
+    contractorAuthReminder(result)
 
     revalidatePath('/contractors');
     return { success: true, contractor: result };
