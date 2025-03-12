@@ -77,7 +77,8 @@ const prismaClientSingleton = () => {
           const addFilter = {
             employee: {
               site: user.site
-            }
+            },
+            hasPermanentAuth:false
           };
           args = addSiteFilter(operation, args, addFilter);
 

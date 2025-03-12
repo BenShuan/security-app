@@ -52,9 +52,13 @@ export const getKeyByKeyNumber = async (keyNumber: string) => {
   }
 };
 
-export const getAllKeyLogs = async () => {
+export const getAllKeyLogs = async (filter:any|null|undefined) => {
   try {
     const keys = await prisma.keyLog.findMany({
+      where:{
+        ...filter,
+      
+      },
       include: {
         employee: true,
         guard: {

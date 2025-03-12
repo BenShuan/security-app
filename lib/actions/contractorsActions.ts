@@ -16,6 +16,7 @@ import { Employee, Prisma } from '@prisma/client';
 import { redirect } from 'next/navigation';
 import prisma from '../prisma';
 import { contractorAuthReminder } from '../db/scheduleJobs';
+import { ActionResponseHandler } from './utils';
 
 const validateContractorForm = (formData: contractorFormSchemaType) => {
   const employeeData = employeeFormSchema.safeParse({
@@ -150,6 +151,26 @@ export async function addMonthToContractorAction(employeeId: string) {
       success: false,
       error: error instanceof Error ? error.message : 'קרתה תקלה בלתי צפויה'
     };
+  }
+}
+
+export async function addPermanentAuthAction(employeeId: string) {
+  console.log(employeeId);
+  try {
+    await prisma.contractor.update({
+      where: { employeeId },
+      data: {
+        hasPermanentAuth:true
+      }
+    });
+
+    console.log('Contractor updated successfully');
+
+    revalidatePath('/contractors');
+    return ActionResponseHandler(true,'לקבלן נוסף אישור קבוע',null)
+  } catch (error) {
+    console.error('Failed to add month to contractor:', error);
+    return ActionResponseHandler(false,'לא ניתן לעדכן קבלן',error)
   }
 }
 

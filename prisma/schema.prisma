@@ -69,11 +69,12 @@ model Employee {
 }
 
 model Contractor {
-  id             Int      @id @default(autoincrement())
-  employee       Employee @relation(fields: [employeeId], references: [idNumber], onDelete: Cascade)
-  employeeId     String   @unique
-  authExpiryDate DateTime
-  companyName    String?
+  id               Int      @id @default(autoincrement())
+  employee         Employee @relation(fields: [employeeId], references: [idNumber], onDelete: Cascade)
+  employeeId       String   @unique
+  authExpiryDate   DateTime
+  companyName      String?
+  hasPermanentAuth Boolean  @default(false)
 }
 
 model File {

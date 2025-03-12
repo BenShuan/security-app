@@ -5,14 +5,16 @@ import { requireAuth } from '@/lib/auth';
 import prisma from '@/lib/prisma';
 import { saltAndHashPassword } from '@/lib/utils/password';
 import { Role } from '@prisma/client';
+import Dashboardcontractors from './components/dashboard-contractors';
+import DashboardKeys from './components/dashboard-keys';
+import DashboardGuard from './components/dashboard-guard';
 
 export default async function HomePage(props: {
   searchParams: Promise<{ q: string; offset: string }>;
 }) {
-
   //Create an admin user
   const admin = await prisma.user.upsert({
-    where:{
+    where: {
       userName: 'admin'
     },
     create: {
@@ -21,13 +23,12 @@ export default async function HomePage(props: {
       role: Role.admin,
       site: 'אור עקיבא',
       userName: 'admin',
-      isActive: true,
+      isActive: true
     },
-    update:{}
-   
-  }) 
+    update: {}
+  });
   const userManager = await prisma.user.upsert({
-    where:{
+    where: {
       userName: 'manager'
     },
     create: {
@@ -36,14 +37,14 @@ export default async function HomePage(props: {
       role: Role.manager,
       site: 'אור עקיבא',
       userName: 'manager',
-      isActive: true,
-    },update:{}
-   
-  })
-  const user = await requireAuth()
+      isActive: true
+    },
+    update: {}
+  });
+  const user = await requireAuth();
   return (
-    <section className="h-full w-full">
-      <ul className="flex flex-wrap gap-4 w-full h-full py-2">
+    <section className="h-full w-full grid grid-cols-3 grid-rows-2 p-4 gap-4  ">
+      {/* <ul className="flex flex-wrap gap-4 w-full h-full py-2">
         {routes.map((route) => {
           if (route.path === '/') return null;
           return (
@@ -57,7 +58,12 @@ export default async function HomePage(props: {
             </li>
           );
         })}
-      </ul>
+      </ul> */}
+
+
+      <Dashboardcontractors />
+      <DashboardKeys/>
+      <DashboardGuard/>
     </section>
   );
 }

@@ -104,11 +104,12 @@ export async function deleteEmployee(employeeId: string) {
   }
 }
 
-export async function getGuards() {
+export async function getGuards(filter:Prisma.EmployeeWhereInput|null=null) {
   try {
     const guards = await prisma.employee.findMany({
       where: {
-        department: DepartmentArray.Values['תפעול-אבטחה']
+        department: DepartmentArray.Values['תפעול-אבטחה'],
+        ...filter
       },
       include: {
         guard: {
