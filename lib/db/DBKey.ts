@@ -1,4 +1,4 @@
-import { Key, KeyLog } from '@prisma/client';
+import { Key, KeyLog, Prisma } from '@prisma/client';
 import prisma from '../prisma';
 import { addSiteFilter, handleError } from './utils';
 import { requireAuth } from '../auth';
@@ -52,7 +52,7 @@ export const getKeyByKeyNumber = async (keyNumber: string) => {
   }
 };
 
-export const getAllKeyLogs = async (filter:any|null|undefined) => {
+export const getAllKeyLogs = async (filter:Prisma.KeyLogWhereInput|null=null) => {
   try {
     const keys = await prisma.keyLog.findMany({
       where:{
