@@ -43,27 +43,15 @@ export default async function HomePage(props: {
   });
   const user = await requireAuth();
   return (
-    <section className="h-full w-full grid grid-cols-3 grid-rows-2 p-4 gap-4  ">
-      {/* <ul className="flex flex-wrap gap-4 w-full h-full py-2">
-        {routes.map((route) => {
-          if (route.path === '/') return null;
-          return (
-            <li
-              key={route.path}
-              className={cn("w-[90%] h-32 lg:w-[30%] lg:h-56 m-auto *:text-3xl *:font-bold *:text-center",
-                  !route.permition.includes(user.role)&&"hidden"
-              )}
-            >
-              <RouteItem route={route} />
-            </li>
-          );
-        })}
-      </ul> */}
-
-
-      <Dashboardcontractors />
-      <DashboardKeys/>
-      <DashboardGuard/>
+    <section className="h-full w-full flex justify-between p-4 gap-4  ">
+      {user.role !== Role.admin ? (<></>
+      ) : (
+        <>
+        <DashboardGuard />
+          <DashboardKeys />
+          <Dashboardcontractors />
+        </>
+      )}
     </section>
   );
 }

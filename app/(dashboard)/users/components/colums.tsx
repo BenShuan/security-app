@@ -3,6 +3,7 @@ import { Header } from '@/components/ui/table/header';
 import { ColumnDef } from '@tanstack/react-table';
 import { User } from '@prisma/client'
 import UsersActionIcons from './user-actions-icons';
+import ResetPasswordButton from './reset-password-button';
 
 export const columns: ColumnDef<User>[] = [
 
@@ -14,11 +15,6 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: 'email',
     id: 'אימייל',
     header: ({ column }) => <Header column={column}  />
-  },
-  {
-    accessorKey: 'password',
-    id: 'סיסמה',
-    header: ({ column }) => <Header column={column} />
   },
   {
     accessorKey: 'site',
@@ -34,10 +30,16 @@ export const columns: ColumnDef<User>[] = [
     id: 'תאריך יצירה',
     header: ({ column }) => <Header column={column}  />,
     cell:({row})=>row.original.createdAt?.toLocaleString("en-gb")
-
+    
   },
- 
-
+  
+  {
+    accessorKey: 'password',
+    id: 'סיסמה',
+    header: ({ column }) => <Header column={column} />,
+    cell: ({ row }) =><ResetPasswordButton userName={row.original.userName }/>
+  },
+  
   {
     accessorKey: 'actions',
     header: ({ column }) =>  <Header column={column}  />,

@@ -1,3 +1,4 @@
+import { Toaster } from '@/components/ui/toast';
 import './globals.css';
 
 import { Analytics } from '@vercel/analytics/react';
@@ -16,8 +17,10 @@ export default async function RootLayout({
 
   return (
     <html lang="he" dir="rtl">
-      <body className="flex min-h-screen w-full flex-col">
+      <body className="flex h-screen w-full flex-col">
         {children}
+        <Toaster duration={3000} />
+
         <Analytics />
       </body>
     </html>

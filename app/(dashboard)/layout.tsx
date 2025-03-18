@@ -30,16 +30,15 @@ export default function DashboardLayout({
 
   return (
     <Providers>
-      <main className="flex min-h-screen flex-col ">
-        <div className="h-20 w-full">
+      <main className="flex flex-col h-full ">
+        <div className="min-h-20 w-full">
           <AppBar />
 
           <DesktopNav />
         </div>
-        <main className="grid flex-grow items-start gap-2 md:mr-14  md:gap-4  ">
+        <main className="flex-grow  gap-2 md:mr-14  md:gap-4  ">
           <Suspense fallback={<Loader/>}>{children}</Suspense>
         </main>
-        <Toaster duration={3000} />
         <Analytics />
       </main>
     </Providers>

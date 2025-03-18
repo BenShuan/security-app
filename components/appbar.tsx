@@ -5,7 +5,7 @@ import { DayTime } from './daytime';
 import { User } from 'app/(dashboard)/components/user';
 import Link from 'next/link';
 
-export function AppBar() {
+export async function AppBar() {
   return (
     <header className="fixed w-full top-0 z-30 flex h-20 items-center gap-4 border-b bg-foreground justify-between px-4 sm:border-0 sm:px-6">
       <Link href="/">

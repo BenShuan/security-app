@@ -45,7 +45,7 @@ const DashboardGuard = async () => {
   return (
     <DashboardCard
       body={renderGuards}
-      header={`בעיות הסמכה (${guards.data?.length})`}
+      header={`סטטוס מאבטחים   (${guards.data?.length})`}
       route={{ name: 'מאבטחים', path: '/employees/guards' } as Route}
     />
   );

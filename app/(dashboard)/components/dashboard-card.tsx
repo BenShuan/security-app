@@ -15,7 +15,7 @@ body:React.ReactNode
 
 const DashboardCard = ({header,route,body}:DashboardCardProps) => {
   return (
-    <Card >
+    <Card className='h-1/2 flex flex-col w-1/3 pb-4' >
       <CardHeader className="font-bold text-center flex flex-row justify-between items-center">
         {header}
         <Link className="font-normal inline-block" href={route.path}>
@@ -24,7 +24,7 @@ const DashboardCard = ({header,route,body}:DashboardCardProps) => {
           </Button>
         </Link>
       </CardHeader>
-      <CardContent>
+      <CardContent className='flex-gorw overflow-scroll'>
       {body}
       </CardContent>
     </Card>

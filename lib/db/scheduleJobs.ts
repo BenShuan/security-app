@@ -104,8 +104,6 @@ export async function contractorAuthReminder(
       const mailsToSend = managers
         .reduce((acc, manager) => (acc += `${manager.email},`), '')
 
-      console.log('guard', mailsToSend);
-
       if (contractor&& new Date(contractor?.authExpiryDate||"")<=new Date()  ) {
         const emailHtml = await ContractorAuthReminderEmail({ contractor: contractor });
         //  Send mail to guard and managers

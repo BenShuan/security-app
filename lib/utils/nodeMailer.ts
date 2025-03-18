@@ -1,6 +1,6 @@
 'use server'
 import nodemailer from 'nodemailer';
-import { requireAuth } from '../auth';
+import { getSession, requireAuth } from '../auth';
 
 // Define an interface for email data
 interface EmailData {
@@ -23,9 +23,9 @@ const transporter = nodemailer.createTransport({
 
 export const sendEmail = async (data: EmailData) => {
   try {
-    const currentUser = await requireAuth();
+    const currentUser = await getSession();
     const info = await transporter.sendMail({
-      from: `"ביטחון דקסל" <${currentUser.email}>`, // Sender address
+      from: `"ביטחון דקסל" <${currentUser?.email||process.env.EMAIL_SERVER_USER}>`, // Sender address
       to: data.to,
       subject: data.subject,
       text: data.text,

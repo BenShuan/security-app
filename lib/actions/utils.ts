@@ -8,7 +8,7 @@ export interface ActionResponse<T> {
 export function   ActionResponseHandler<T>(
   success: boolean,
   message: string,
-  data: T | null
+  data?: T | null
 ): { success: boolean; message?: string; data?: T } {
   if (success) {
     if (data) {

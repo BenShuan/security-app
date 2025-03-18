@@ -62,7 +62,7 @@ export async function requireAuth() {
   return session;
 }
 
-export async function registerUser({
+export default async function registerUser({
   password,
   userName,
   site,

@@ -3,10 +3,11 @@
 import { getUserFromDb } from '@/lib/db/DBUsers';
 import { createToken, deleteToken, requireAuth } from '../auth';
 import { revalidatePath } from 'next/cache';
-import { SiteArrayType } from '../schemes';
-import { comparePasswords } from '../utils/password';
-import { Role } from '@prisma/client';
+import { SiteArray, SiteArrayType } from '../schemes';
+import { comparePasswords, saltAndHashPassword } from '../utils/password';
+import { Role, User } from '@prisma/client';
 import { redirect } from 'next/navigation';
+import prisma from '../prisma';
 
 export async function signInAction(
   initState: { success: boolean; message: string },
@@ -54,3 +55,45 @@ export const checkManeger = async () => {
   const user = await requireAuth();
   return user.role !== Role.guard;
 };
+
+
+export async function signUpAction({
+  password,
+  userName,
+  site,
+  role,
+  email
+}: User) {
+  // Hash the password before storing
+  const hashedPassword = await saltAndHashPassword(password);
+
+  try {
+    // Add user to your database (example using prisma)
+    const user = await prisma.user.create({
+      data: {
+        userName,
+        email: email,
+        password: hashedPassword,
+        site: site || SiteArray.Values['אור עקיבא'],
+        role: (role as Role) || ('guard' as Role) // default role
+      }
+    });
+
+    // Automatically sign in the user after registration
+    await createToken(
+      user.id,
+      user.userName,
+      user.role,
+      user.site as SiteArrayType
+    );
+
+    return { success: true, user };
+  } catch (error: any) {
+    // Handle specific errors (like duplicate email)
+    if (error.code === 'P2002') {
+      throw new Error('Email already exists');
+    }
+    throw error;
+  }
+}
+

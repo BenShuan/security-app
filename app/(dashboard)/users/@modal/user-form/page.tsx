@@ -14,7 +14,7 @@ export default function ContractorModal() {
   return (
     <>
       <Modal
-        title="הוסף קבלן חדש"
+        title="עדכן משתמש"
         open={isOpen}
         onOpenChange={() => router.push('/users')}
         className="max-h-[90vh] h-full overflow-y-auto hidden sm:block "
