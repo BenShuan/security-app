@@ -16,7 +16,7 @@ const ResetPassswordForm = () => {
   const childClass = 'h-10 rounded-full border-2 border-secondary text-xl';
 
   const route = useRouter()
-  const [state, formAction, pending] = useActionState(updateUserPassWordAction, {} as ActionResponse<User>);
+  const [state, formAction, pending] = useActionState(updateUserPassWordAction, {success:false,message:'',data:null} as ActionResponse<User> );
 
   const [userName, setUserName] = useState('');
 

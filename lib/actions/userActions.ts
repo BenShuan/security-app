@@ -28,11 +28,11 @@ export async function getUserAction(userId: string) {
     if (user?.success) {
       return ActionResponseHandler(true, 'משתמש נמצא', user.data);
     } else {
-      return ActionResponseHandler(false, user?.error);
+      return ActionResponseHandler(false, user?.error,null);
     }
   } catch (error) {
     console.error(error);
-    return ActionResponseHandler(false, 'לא נמצא משתמש');
+    return ActionResponseHandler(false, 'לא נמצא משתמש',null);
   }
 }
 
@@ -67,7 +67,7 @@ export const updateUserAction = async (user: userSchemaType) => {
     });
 
     if (!newPassword.success) {
-      return ActionResponseHandler(false, newPassword.error);
+      return ActionResponseHandler(false, newPassword.error||'בעיה בעדכון המשתמש');
     }
 
     revalidatePath('/users');
@@ -90,21 +90,21 @@ export async function updateUserPassWordAction(initState: ActionResponse<User>, 
     const confPassword = formData.get('confirmPassword') as string;
 
     if (!userName || !code || !password || !confPassword) {
-      return ActionResponseHandler(false, 'יש למלא את כל הפרטים');
+      return ActionResponseHandler<User>(false, 'יש למלא את כל הפרטים');
     }
 
     if (password !== confPassword) {
-      return ActionResponseHandler(false, 'הסיסמאות אינן תואמות');
+      return ActionResponseHandler<User>(false, 'הסיסמאות אינן תואמות');
     }
 
     const user = await getUserFromDb(userName);
 
     if (!user.success || !user.data) {
-      return ActionResponseHandler(false, user.error || 'משתמש לא קיים');
+      return ActionResponseHandler<User>(false, user.error || 'משתמש לא קיים');
     }
 
     if (!(await comparePasswords(code, user.data.password))) {
-      return ActionResponseHandler(false, 'קוד לא תואם');
+      return ActionResponseHandler<User>(false, 'קוד לא תואם');
     }
 
     // Add you logic for checking the code here
@@ -116,19 +116,19 @@ export async function updateUserPassWordAction(initState: ActionResponse<User>, 
       password: hashedPassword
     });
 
-    if (!updatedUser.success) {
-      return ActionResponseHandler(false, updatedUser.error);
+    if (!updatedUser.success || !updatedUser.data) {
+      return ActionResponseHandler<User>(false, updatedUser.error || 'בעיה בעדכון הסיסמא');
+    }else{
+
+      revalidatePath('/users');
+      return ActionResponseHandler<User>(true, 'הסיסמא עודכנה בהצלחה', updatedUser.data);
     }
-    revalidatePath('/users');
-    return ActionResponseHandler(true, 'הסיסמא עודכנה בהצלחה');
 
   } catch (error: any) {
     console.error('Error in updateUserPassWord:', error);
-    return ActionResponseHandler(
+    return ActionResponseHandler<User>(
       false,
-      error.message || 'בעיה בעדכון הסיסמא',
-      undefined
-    );
+      error.message || 'בעיה בעדכון הסיסמא' );
   }
 };
 

@@ -102,7 +102,7 @@ export function useUserForm() {
           toast.success('משתמש עודכן בהצלחה');
           router.push('/users');
         } else {
-          throw new Error(result.error);
+          throw new Error(result.message);
         }
       } catch (error) {
         toast.error('שגיאה', {

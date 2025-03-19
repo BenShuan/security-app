@@ -1,6 +1,6 @@
 import { error } from 'console';
 import prisma from '../prisma';
-import { handleError } from './utils';
+import { DBResponseHandler, handleError } from './utils';
 import { Prisma, User } from '@prisma/client';
 import { sendEmail } from '../utils/nodeMailer';
 
@@ -75,13 +75,9 @@ export const createOrUpdateUser = async (user: User) => {
     console.log('newUser', newUser)
 
 
-    return {
-      success:true,
-      data:newUser,
-      error:""
-    };
+    return DBResponseHandler(newUser,null)
   } catch (error: any) {
-    return handleError(error)
+    return DBResponseHandler(null,error)
   }
 
 
