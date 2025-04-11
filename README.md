@@ -1,110 +1,63 @@
-# Security App
+# Security App 🛡️
 
-This is a security application designed to manage employees, contractors, guards, and related entities. The application uses Prisma as the ORM and PostgreSQL as the database.
+**Security App** is a web-based system for managing employees, contractors, guards, and related entities, featuring role-based access, and database integration using Prisma and PostgreSQL.
 
-## Table of Contents
+## 📝 Why Security App?
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Database Schema](#database-schema)
-- [License](#license)
+In today's fast-paced world, ensuring the safety and efficiency of security operations is paramount. Traditional methods of managing security personnel, patrols, and checkpoints often lead to inefficiencies, miscommunication, and lack of real-time oversight. **Security App** addresses these challenges by providing a centralized platform that streamlines operations, enhances accountability, and ensures timely responses to incidents. Whether it's tracking guards in real-time, managing patrol schedules, or handling employee and contractor data, this app is designed to modernize and simplify security management.
 
-## Installation
+## 📌 Features
 
-1. Clone the repository:
-  ```sh
-  git clone <repository-url>
-  ```
-2. Navigate to the project directory:
-  ```sh
-  cd securety-app
-  ```
-3. Install dependencies:
-  ```sh
-  npm install
-  ```
-4. Set up the database:
-  ```sh
-  npx prisma migrate dev --name init
-  ```
-
-## Usage
-
-1. Start the application:
-  ```sh
-  npm start
-  ```
-2. The application will be available at `http://localhost:3000`.
-
-## Database Schema
-
-The application uses the following database schema:
-
-### User
-
-```prisma
-model User {
-  id        String   @id @default(uuid())
-  userName  String   @unique
-  password  String
-  site      String
-  role      Role     @default(guard)
-  createdAt DateTime @default(now())
-}
-```
-
-### Employee
-
-```prisma
-model Employee {
-  id          String      @id @default(uuid())
-  firstName   String
-  lastName    String
-  employeeId  String      @unique
-  idNumber    String?     @unique
-  phoneNumber String?
-  email       String?     @unique
-  position    String?
-  address     String?
-  active      Boolean     @default(true)
-  startDate   DateTime    @default(now())
-  endDate     DateTime?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  department  String?
-  site        String?
-  keyLogs     KeyLog[]
-  isManager   Boolean     @default(false)
-  contractor  Contractor?
-  managerId   String?
-  manager     Employee?   @relation("ManagedContractors", fields: [managerId], references: [id], onDelete: SetNull)
-  employees   Employee[]  @relation("ManagedContractors")
-  guard       Guard?
-  car         Car?
-  RideLog     RideLog[]
-}
-```
-
-### Contractor
-
-```prisma
-model Contractor {
-  id             Int      @id @default(autoincrement())
-  employee       Employee @relation(fields: [employeeId], references: [idNumber], onDelete: Cascade)
-  employeeId     String   @unique
-}
-```
-## Features
-
+- 🔐 Role-based login for Admin, Officer, and Guard
+- 🗺️ Map integration for checkpoints and guard tracking
+- 📅 Patrol schedule management and assignment
+- ✅ Check-in validation at specific checkpoints
+- 🚨 Alert notifications for missed check-ins or schedule issues
 - **User Management**: Manage users with different roles such as guards, employees, and contractors.
 - **Employee Tracking**: Keep track of employee details, including personal information, position, and department.
 - **Contractor Management**: Manage contractors and their association with employees.
 - **Guard Management**: Handle guard details and their assignments.
 - **Vehicle Management**: Track vehicles and their usage.
 - **Access Logs**: Monitor key logs and ride logs for security purposes.
-- **Role-Based Access Control**: Ensure secure access to different parts of the application based on user roles.
 - **Database Integration**: Seamless integration with PostgreSQL using Prisma ORM.
 
-## License
+## 🛠️ Tech Stack
 
-This project is licensed under the MIT License. See the [LICENSE.md](./LICENSE.md) file for details.
+- React.js (Frontend)
+- Node.js + Express (Backend)
+- MongoDB (Database for real-time tracking)
+- PostgreSQL + Prisma (Database for user and entity management)
+- Firebase (Authentication & Notifications)
+- Leaflet.js (Map integration)
+
+## 📦 Installation
+
+1. **Clone the repo**
+```bash
+git clone https://github.com/BenShuan/security-app.git
+```
+
+2. **Install server dependencies**
+```bash
+cd server
+npm install
+npm run dev
+```
+
+> ⚠️ Don’t forget to add environment variables and Firebase credentials as needed.
+
+## 📷 Screenshots
+
+_(Add screenshots of the dashboard, guard map, and check-in view here)_
+
+## 🌐 Website
+
+Visit the live application: [Security App Website](https://securety-app.vercel.app/)
+
+## 👥 Authors
+
+- Developed by: [Ben Shuan](https://github.com/BenShuan)
+
+## 📄 License
+
+This project is for academic and demonstration purposes.
